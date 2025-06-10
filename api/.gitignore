@@ -1,2 +1,5 @@
 *.env
 *.sum
+/tmp
+
+*.db

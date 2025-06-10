@@ -1,16 +1,37 @@
+-include .env
+export
+
 # Makefile adaptado para SQLite
 
 # --- Variáveis ---
 
 # Define o nome do arquivo do banco de dados SQLite.
-# Pode ser facilmente sobrescrito na linha de comando. Ex: make migrate-up DB_FILE=meu_app.db
-DB_FILE := dividas.db
+# Pega o valor da variável de ambiente SQLITE_DATABASE.
+DB_FILE := $(SQLITE_DATABASE)
 
 # Define a URL de conexão para o SQLite, usada pela ferramenta 'migrate'.
 # O formato é sqlite3://<caminho_do_arquivo>
 DATABASE_URL := sqlite3://$(DB_FILE)
 
+# Caminho para os arquivos de migração.
 MIGRATIONS_PATH := infra/migrations
+
+# --- Comandos de API ---
+.PHONY: run
+run: ## Inicia o servidor da API
+	@go run cmd/api/main.go
+
+.PHONY: dev
+dev: ## Inicia o servidor em modo de desenvolvimento com hot-reload (usando air)
+	@echo "Iniciando em modo de desenvolvimento com Air..."
+	@air
+
+.PHONY: test
+test: ## Executa os testes da aplicação
+	@go test -v ./... -coverprofile=coverage.out
+	@go tool cover -html=coverage.out -o coverage.html
+	@echo "Cobertura de testes gerada em coverage.html"
+
 
 # --- Comandos de Migração ---
 
