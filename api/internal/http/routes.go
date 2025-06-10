@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func SetupRoutes(e *echo.Echo, friendHandler handlers.FriendHandler) {
+func SetupRoutes(e *echo.Echo, friendHandler handlers.FriendHandler, subscriptionHandler handlers.SubscriptionHandler) {
 	group := e.Group("/api/v1")
 
 	if config.Env.Env == config.EnvDevelopment {
@@ -16,6 +16,7 @@ func SetupRoutes(e *echo.Echo, friendHandler handlers.FriendHandler) {
 	}
 
 	setupFriendRoutes(group, friendHandler)
+	setupSubscriptionRoutes(group, subscriptionHandler)
 }
 
 func setupInternalRoutes(group *echo.Group) {
@@ -24,7 +25,12 @@ func setupInternalRoutes(group *echo.Group) {
 	})
 }
 
-func setupFriendRoutes(group *echo.Group, friendHandler handlers.FriendHandler) {
-	group.POST("/friends", friendHandler.CreateFriend)
-	group.GET("/friends", friendHandler.GetAllFriends)
+func setupFriendRoutes(group *echo.Group, h handlers.FriendHandler) {
+	group.POST("/friends", h.CreateFriend)
+	group.GET("/friends", h.GetAllFriends)
+}
+
+func setupSubscriptionRoutes(group *echo.Group, h handlers.SubscriptionHandler) {
+	group.POST("/subscriptions", h.CreateSubscription)
+	group.GET("/subscriptions", h.GetAllSubscriptions)
 }

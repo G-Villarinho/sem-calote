@@ -15,14 +15,14 @@ type EchoServer struct {
 	port string
 }
 
-func NewEchoServer(friendHandler handlers.FriendHandler) *EchoServer {
+func NewEchoServer(friendHandler handlers.FriendHandler, subscriptionHandler handlers.SubscriptionHandler) *EchoServer {
 	e := echo.New()
 
 	e.Use(middlewares.CORS(config.Env.API.AllowOrigins))
 	e.Use(middleware.RequestID())
 	e.Use(middleware.Recover())
 
-	SetupRoutes(e, friendHandler)
+	SetupRoutes(e, friendHandler, subscriptionHandler)
 	return &EchoServer{
 		e:    e,
 		port: fmt.Sprintf(":%d", config.Env.API.Port),

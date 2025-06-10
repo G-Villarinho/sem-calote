@@ -2,8 +2,10 @@ package repositories
 
 import (
 	"context"
+	"time"
 
 	"github.com/g-villarinho/sem-calote/api/internal/models"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -25,6 +27,14 @@ func NewFriendRepository(db *gorm.DB) FriendRepository {
 }
 
 func (r *friendRepository) CreateFriend(ctx context.Context, friend *models.Friend) error {
+	id, err := uuid.NewRandom()
+	if err != nil {
+		return err
+	}
+
+	friend.ID = id
+	friend.CreatedAt = time.Now().UTC()
+
 	if err := r.db.WithContext(ctx).Create(friend).Error; err != nil {
 		return err
 	}

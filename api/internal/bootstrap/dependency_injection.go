@@ -16,12 +16,15 @@ func InitializeDependencyInjection(container *dig.Container) {
 
 func provideHandlers(container *dig.Container) {
 	pkgs.Provide(container, handlers.NewFriendHandler)
+	pkgs.Provide(container, handlers.NewSubscriptionHandler)
 }
 
 func provideServices(container *dig.Container) {
 	pkgs.Provide(container, services.NewFriendService)
+	pkgs.Provide(container, services.NewSubscriptionService)
 }
 
 func provideRepositories(container *dig.Container) {
 	pkgs.Provide(container, repositories.NewFriendRepository)
+	pkgs.Provide(container, repositories.NewSubscriptionRepository)
 }
