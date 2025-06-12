@@ -27,7 +27,7 @@ export function Navbar() {
             </Button>
             <Separator orientation="vertical" className="h-5" />
             <Button variant="ghost" size="sm" asChild>
-              <Link to="/subscription" className="flex items-center gap-x-2">
+              <Link to="/subscriptions" className="flex items-center gap-x-2">
                 <CreditCard className="size-4" />
                 <span>Subscription</span>
               </Link>

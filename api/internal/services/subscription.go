@@ -10,6 +10,7 @@ import (
 type SubscriptionService interface {
 	CreateSubscription(ctx context.Context, subscription *models.Subscription) (*models.SubscriptionResponse, error)
 	GetAllSubscriptions(ctx context.Context, withFriends bool) ([]models.SubscriptionResponse, error)
+	GetSubscriptionByID(ctx context.Context, id string, withFriends bool) (*models.SubscriptionResponse, error)
 }
 
 type subscriptionService struct {
@@ -43,4 +44,17 @@ func (s *subscriptionService) GetAllSubscriptions(ctx context.Context, withFrien
 	}
 
 	return subscriptionsResponse, nil
+}
+
+func (s *subscriptionService) GetSubscriptionByID(ctx context.Context, id string, withFriends bool) (*models.SubscriptionResponse, error) {
+	subscription, err := s.subscriptionRepo.GetSubscriptionByID(ctx, id, withFriends)
+	if err != nil {
+		return nil, err
+	}
+
+	if subscription == nil {
+		return nil, models.ErrSubscriptionNotFound
+	}
+
+	return subscription.ToSubscriptionResponse(), nil
 }

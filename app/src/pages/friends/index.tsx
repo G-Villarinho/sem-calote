@@ -1,8 +1,6 @@
 import { Heading } from "@/components/heading";
-import { Button } from "@/components/ui/button";
-import { PlusCircle, Users } from "lucide-react";
+import { Users } from "lucide-react";
 import { CreateFriendSheet } from "./create-friend-sheet";
-import { useState } from "react";
 
 import {
   Table,
@@ -20,8 +18,6 @@ import { queryKeys } from "@/lib/query-keys";
 import { getAllFriends } from "@/api/get-all-friends";
 
 export function FriendsPage() {
-  const [isCreateFriendSheetOpen, setIsCreateFriendSheetOpen] = useState(false);
-
   const { data: friends } = useQuery({
     queryKey: queryKeys.friends.all(),
     queryFn: () => getAllFriends(),
@@ -36,21 +32,10 @@ export function FriendsPage() {
         icon={Users}
         description="Manage your friends list"
       >
-        <Button
-          size="lg"
-          className="mr-2"
-          onClick={() => setIsCreateFriendSheetOpen(true)}
-        >
-          <PlusCircle className="h-4 w-4" />
-          <span>Add Friend</span>
-        </Button>
+        <CreateFriendSheet />
       </Heading>
-      <CreateFriendSheet
-        open={isCreateFriendSheetOpen}
-        onOpenChange={setIsCreateFriendSheetOpen}
-      />
 
-      <Card className="border-border/40 shadow-sm">
+      <Card className="border-border/40 shadow-sm mt-8">
         <CardContent className="px-8">
           <Table>
             <TableHeader>

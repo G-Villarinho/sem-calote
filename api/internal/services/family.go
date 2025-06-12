@@ -41,7 +41,7 @@ func (f *familyService) CreateFamily(ctx context.Context, family *models.Family)
 		return models.ErrFriendNotFound
 	}
 
-	subscription, err := f.subscriptionRepo.GetSubscriptionByID(ctx, family.SubscriptionID.String())
+	subscription, err := f.subscriptionRepo.GetSubscriptionByID(ctx, family.SubscriptionID.String(), false)
 	if err != nil {
 		return fmt.Errorf("get subscription by ID %s: %w", family.SubscriptionID.String(), err)
 	}

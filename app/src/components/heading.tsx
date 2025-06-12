@@ -14,7 +14,7 @@ export function Heading({
   children,
 }: HeadingProps) {
   return (
-    <div className="flex items-center justify-between gap-4 mb-8">
+    <div className="flex items-center justify-between gap-4">
       <div className="flex items-center gap-x-3">
         <div className="p-3 rounded-lg bg-accent border border-primary/50">
           <Icon className="w-8 h-8 text-primary" />

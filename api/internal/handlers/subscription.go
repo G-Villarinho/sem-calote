@@ -12,6 +12,7 @@ import (
 type SubscriptionHandler interface {
 	CreateSubscription(ectx echo.Context) error
 	GetAllSubscriptions(ectx echo.Context) error
+	GetSubscription(ectx echo.Context) error
 }
 
 type subscriptionHandler struct {
@@ -63,4 +64,27 @@ func (h *subscriptionHandler) GetAllSubscriptions(ectx echo.Context) error {
 	}
 
 	return ectx.JSON(http.StatusOK, subscriptions)
+}
+
+func (h *subscriptionHandler) GetSubscription(ectx echo.Context) error {
+	logger := slog.With(
+		slog.String("handler", "subscription"),
+		slog.String("method", "GetSubscription"),
+	)
+
+	subscriptionID := ectx.Param("subscriptionId")
+	if subscriptionID == "" {
+		logger.Error("missing subscription ID")
+		return echo.ErrBadRequest
+	}
+
+	withFriends := ectx.QueryParam("withFriends") == "true"
+
+	subscription, err := h.ss.GetSubscriptionByID(ectx.Request().Context(), subscriptionID, withFriends)
+	if err != nil {
+		logger.Error("get subscription by ID", "error", err)
+		return echo.ErrInternalServerError
+	}
+
+	return ectx.JSON(http.StatusOK, subscription)
 }

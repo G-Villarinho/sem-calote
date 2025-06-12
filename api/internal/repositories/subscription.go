@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/g-villarinho/sem-calote/api/internal/models"
@@ -12,7 +13,7 @@ import (
 type SubscriptionRepository interface {
 	CreateSubscription(ctx context.Context, subscription *models.Subscription) error
 	GetAllSubscriptions(ctx context.Context, withFriends bool) ([]models.Subscription, error)
-	GetSubscriptionByID(ctx context.Context, id string) (*models.Subscription, error)
+	GetSubscriptionByID(ctx context.Context, id string, withFriends bool) (*models.Subscription, error)
 }
 
 type subscriptionRepository struct {
@@ -58,10 +59,18 @@ func (r *subscriptionRepository) GetAllSubscriptions(ctx context.Context, withFr
 	return subscriptions, nil
 }
 
-func (r *subscriptionRepository) GetSubscriptionByID(ctx context.Context, id string) (*models.Subscription, error) {
+func (r *subscriptionRepository) GetSubscriptionByID(ctx context.Context, id string, withFriends bool) (*models.Subscription, error) {
 	var subscription models.Subscription
-	if err := r.db.WithContext(ctx).Where("id = ?", id).First(&subscription).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+
+	query := r.db.WithContext(ctx)
+
+	if withFriends {
+		query = query.Preload("Friends")
+	}
+
+	err := query.Where("id = ?", id).First(&subscription).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
 

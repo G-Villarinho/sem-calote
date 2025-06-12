@@ -40,6 +40,7 @@ func setupFriendRoutes(group *echo.Group, h handlers.FriendHandler) {
 func setupSubscriptionRoutes(group *echo.Group, h handlers.SubscriptionHandler) {
 	group.POST("/subscriptions", h.CreateSubscription)
 	group.GET("/subscriptions", h.GetAllSubscriptions)
+	group.GET("/subscriptions/:subscriptionId", h.GetSubscription)
 }
 
 func setupFamilyRoutes(group *echo.Group, h handlers.FamilyHandler) {

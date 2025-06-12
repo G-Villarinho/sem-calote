@@ -6,34 +6,38 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { CreateFriendSheetForm } from "./create-friend-sheet-form";
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
+import { CreateSubscriptionSheetForm } from "./create-subscription-sheet-form";
 
-export function CreateFriendSheet() {
-  const [isCreateFriendSheetOpen, setIsCreateFriendSheetOpen] = useState(false);
+export function CreateSubscriptionSheet() {
+  const [isCreateSubscriptionSheetOpen, setIsCreateSubscriptionSheetOpen] =
+    useState(false);
 
   return (
     <Sheet
-      open={isCreateFriendSheetOpen}
-      onOpenChange={setIsCreateFriendSheetOpen}
+      open={isCreateSubscriptionSheetOpen}
+      onOpenChange={setIsCreateSubscriptionSheetOpen}
     >
       <SheetTrigger asChild>
         <Button size="lg" className="mr-2">
           <PlusCircle className="h-4 w-4" />
-          <span>Add Friend</span>
+          <span>Add subscription</span>
         </Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Edit profile</SheetTitle>
+          <SheetTitle>Add New Subscription</SheetTitle>
           <SheetDescription>
-            Make changes to your profile here. Click save when you&apos;re done.
+            Add a new subscription to track your recurring payments.
           </SheetDescription>
         </SheetHeader>
 
-        <CreateFriendSheetForm onOpenChange={setIsCreateFriendSheetOpen} />
+        <CreateSubscriptionSheetForm
+          onClose={() => setIsCreateSubscriptionSheetOpen(false)}
+        />
       </SheetContent>
     </Sheet>
   );
