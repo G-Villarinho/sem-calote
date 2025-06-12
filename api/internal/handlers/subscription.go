@@ -13,6 +13,8 @@ type SubscriptionHandler interface {
 	CreateSubscription(ectx echo.Context) error
 	GetAllSubscriptions(ectx echo.Context) error
 	GetSubscription(ectx echo.Context) error
+	DeleteSubscription(ectx echo.Context) error
+	UpdateSubscription(ectx echo.Context) error
 }
 
 type subscriptionHandler struct {
@@ -32,7 +34,7 @@ func (h *subscriptionHandler) CreateSubscription(ectx echo.Context) error {
 		slog.String("method", "CreateSubscription"),
 	)
 
-	var payload models.CreateSubscriptionPayload
+	var payload models.SubscriptionPayload
 	if err := ectx.Bind(&payload); err != nil {
 		logger.Error("bind payload", "error", err)
 		return echo.ErrBadRequest
@@ -87,4 +89,61 @@ func (h *subscriptionHandler) GetSubscription(ectx echo.Context) error {
 	}
 
 	return ectx.JSON(http.StatusOK, subscription)
+}
+
+func (h *subscriptionHandler) DeleteSubscription(ectx echo.Context) error {
+	logger := slog.With(
+		slog.String("handler", "subscription"),
+		slog.String("method", "DeleteSubscription"),
+	)
+
+	subscriptionID := ectx.Param("subscriptionId")
+	if subscriptionID == "" {
+		logger.Error("missing subscription ID")
+		return echo.ErrBadRequest
+	}
+
+	if err := h.ss.DeleteSubscriptionByID(ectx.Request().Context(), subscriptionID); err != nil {
+		if err == models.ErrSubscriptionNotFound {
+			logger.Error("subscription not found", "error", err)
+			return echo.ErrNotFound
+		}
+		logger.Error("delete subscription by ID", "error", err)
+		return echo.ErrInternalServerError
+	}
+
+	return ectx.NoContent(http.StatusNoContent)
+}
+
+func (h *subscriptionHandler) UpdateSubscription(ectx echo.Context) error {
+	logger := slog.With(
+		slog.String("handler", "subscription"),
+		slog.String("method", "UpdateSubscription"),
+	)
+
+	subscriptionID := ectx.Param("subscriptionId")
+	if subscriptionID == "" {
+		logger.Error("missing subscription ID")
+		return echo.ErrBadRequest
+	}
+
+	var payload models.SubscriptionPayload
+	if err := ectx.Bind(&payload); err != nil {
+		logger.Error("bind payload", "error", err)
+		return echo.ErrBadRequest
+	}
+
+	subscription := payload.ToSubscription()
+
+	resp, err := h.ss.UpdateSubscription(ectx.Request().Context(), subscriptionID, subscription)
+	if err != nil {
+		if err == models.ErrSubscriptionNotFound {
+			logger.Error("subscription not found", "error", err)
+			return echo.ErrNotFound
+		}
+		logger.Error("update subscription", "error", err)
+		return echo.ErrInternalServerError
+	}
+
+	return ectx.JSON(http.StatusOK, resp)
 }

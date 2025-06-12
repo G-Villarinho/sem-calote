@@ -76,7 +76,8 @@ export function SubscriptionsPage() {
                 <TableHead>Monthly Cost</TableHead>
                 <TableHead>Due Day</TableHead>
                 <TableHead>Next Billing</TableHead>
-                <TableHead className="text-right">Status</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

@@ -22,7 +22,7 @@ type Subscription struct {
 	Friends []*Friend `gorm:"many2many:family;"`
 }
 
-type CreateSubscriptionPayload struct {
+type SubscriptionPayload struct {
 	Name       string  `json:"name" validate:"required"`
 	TotalPrice float64 `json:"total_price" validate:"required"`
 	DueDay     int     `json:"due_day" validate:"required"`
@@ -39,7 +39,7 @@ type SubscriptionResponse struct {
 	CreatedAt       time.Time        `json:"created_at"`
 }
 
-func (p *CreateSubscriptionPayload) ToSubscription() *Subscription {
+func (p *SubscriptionPayload) ToSubscription() *Subscription {
 	return &Subscription{
 		Name:              p.Name,
 		TotalPriceInCents: int64(p.TotalPrice * 100),

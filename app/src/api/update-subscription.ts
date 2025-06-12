@@ -20,17 +20,14 @@ export interface UpdateSubscriptionResponse {
   created_at: string;
 }
 
-export async function updateSubscription(
-  { subscriptionId }: UpdateSubscriptionParams,
-  { name, total_price, due_day }: UpdateSubscriptionRequest
-): Promise<UpdateSubscriptionResponse> {
+export async function updateSubscription({
+  subscriptionId,
+  ...data
+}: UpdateSubscriptionRequest &
+  UpdateSubscriptionParams): Promise<UpdateSubscriptionResponse> {
   const response = await api.put<UpdateSubscriptionResponse>(
     `/subscriptions/${subscriptionId}`,
-    {
-      name,
-      total_price,
-      due_day,
-    }
+    data
   );
 
   return response.data;

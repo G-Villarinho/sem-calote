@@ -2,6 +2,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { format } from "date-fns";
 import { CreditCard, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { SubscriptionTableCellActions } from "./subscription-table-cell-action";
 
 interface SubscriptionTableRowProps {
   subscription: {
@@ -66,10 +67,13 @@ export function SubscriptionTableRow({
           <span>{format(subscription.next_billing_date, "MMM d, yyyy")}</span>
         </div>
       </TableCell>
-      <TableCell className="text-right">
+      <TableCell>
         <Badge variant={getBadgeVariantByDaysLeft(subscription.days_left)}>
           {formatDaysLeftText(subscription.days_left)}
         </Badge>
+      </TableCell>
+      <TableCell>
+        <SubscriptionTableCellActions subscriptionId={subscription.id} />
       </TableCell>
     </TableRow>
   );
