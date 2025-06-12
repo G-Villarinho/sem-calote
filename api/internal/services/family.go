@@ -60,7 +60,6 @@ func (f *familyService) CreateFamily(ctx context.Context, family *models.Family)
 func (f *familyService) DeleteFamily(ctx context.Context, friendID string, subscriptionID string) error {
 	err := f.familyRepo.DeleteFamily(ctx, friendID, subscriptionID)
 	if err != nil {
-
 		if errors.Is(err, models.ErrNotFound) {
 			return models.ErrFamilyAssociationNotFound
 		}

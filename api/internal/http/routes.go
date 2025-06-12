@@ -8,7 +8,11 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func SetupRoutes(e *echo.Echo, friendHandler handlers.FriendHandler, subscriptionHandler handlers.SubscriptionHandler) {
+func SetupRoutes(
+	e *echo.Echo,
+	friendHandler handlers.FriendHandler,
+	subscriptionHandler handlers.SubscriptionHandler,
+	familyHandler handlers.FamilyHandler) {
 	group := e.Group("/api/v1")
 
 	if config.Env.Env == config.EnvDevelopment {
@@ -17,6 +21,7 @@ func SetupRoutes(e *echo.Echo, friendHandler handlers.FriendHandler, subscriptio
 
 	setupFriendRoutes(group, friendHandler)
 	setupSubscriptionRoutes(group, subscriptionHandler)
+	setupFamilyRoutes(group, familyHandler)
 }
 
 func setupInternalRoutes(group *echo.Group) {
@@ -33,4 +38,9 @@ func setupFriendRoutes(group *echo.Group, h handlers.FriendHandler) {
 func setupSubscriptionRoutes(group *echo.Group, h handlers.SubscriptionHandler) {
 	group.POST("/subscriptions", h.CreateSubscription)
 	group.GET("/subscriptions", h.GetAllSubscriptions)
+}
+
+func setupFamilyRoutes(group *echo.Group, h handlers.FamilyHandler) {
+	group.POST("/subscriptions/:subscriptionId/members", h.AddFamilyMember)
+	group.DELETE("/subscriptions/:subscriptionId/members/:friendId", h.RemoveFamilyMember)
 }

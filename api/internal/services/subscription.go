@@ -38,8 +38,8 @@ func (s *subscriptionService) GetAllSubscriptions(ctx context.Context, withFrien
 	}
 
 	var subscriptionsResponse = make([]models.SubscriptionResponse, 0, len(subscriptions))
-	for i, subscription := range subscriptions {
-		subscriptionsResponse[i] = *subscription.ToSubscriptionResponse()
+	for _, subscription := range subscriptions {
+		subscriptionsResponse = append(subscriptionsResponse, *subscription.ToSubscriptionResponse())
 	}
 
 	return subscriptionsResponse, nil

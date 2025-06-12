@@ -10,7 +10,8 @@ import (
 )
 
 type FamilyHandler interface {
-	CreateFamily(ectx echo.Context) error
+	AddFamilyMember(ectx echo.Context) error
+	RemoveFamilyMember(ectx echo.Context) error
 }
 
 type familyHandler struct {
@@ -24,10 +25,10 @@ func NewFamilyHandler(
 	}
 }
 
-func (h *familyHandler) CreateFamily(ectx echo.Context) error {
+func (h *familyHandler) AddFamilyMember(ectx echo.Context) error {
 	logger := slog.With(
 		"handler", "family",
-		"method", "CreateFamily",
+		"method", "AddFamilyMember",
 	)
 
 	subscriptionID := ectx.Param("subscriptionId")
@@ -45,7 +46,39 @@ func (h *familyHandler) CreateFamily(ectx echo.Context) error {
 	}
 
 	if err := h.fs.CreateFamily(ectx.Request().Context(), family); err != nil {
+		if err == models.ErrFriendNotFound {
+			logger.Error("create family", "error", err)
+			return echo.ErrNotFound
+		}
+
+		if err == models.ErrSubscriptionNotFound {
+			logger.Error("create family", "error", err)
+			return echo.ErrNotFound
+		}
+
 		logger.Error("create family", "error", err)
+		return echo.ErrInternalServerError
+	}
+
+	return ectx.NoContent(http.StatusOK)
+}
+
+func (h *familyHandler) RemoveFamilyMember(ectx echo.Context) error {
+	logger := slog.With(
+		"handler", "family",
+		"method", "RemoveFamilyMember",
+	)
+
+	subscriptionID := ectx.Param("subscriptionId")
+	friendID := ectx.Param("friendId")
+
+	if err := h.fs.DeleteFamily(ectx.Request().Context(), friendID, subscriptionID); err != nil {
+		if err == models.ErrFamilyAssociationNotFound {
+			logger.Error("remove family member", "error", err)
+			return echo.ErrNotFound
+		}
+
+		logger.Error("remove family member", "error", err)
 		return echo.ErrInternalServerError
 	}
 

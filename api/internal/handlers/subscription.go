@@ -54,7 +54,7 @@ func (h *subscriptionHandler) GetAllSubscriptions(ectx echo.Context) error {
 		slog.String("method", "GetAllSubscriptions"),
 	)
 
-	withFriends := ectx.QueryParam("with_friends") == "true"
+	withFriends := ectx.QueryParam("withFriends") == "true"
 
 	subscriptions, err := h.ss.GetAllSubscriptions(ectx.Request().Context(), withFriends)
 	if err != nil {

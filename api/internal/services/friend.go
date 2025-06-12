@@ -48,8 +48,8 @@ func (f *friendService) GetAllFriends(ctx context.Context) ([]models.FriendRespo
 	}
 
 	var friendsResponse = make([]models.FriendResponse, 0, len(friends))
-	for i, friend := range friends {
-		friendsResponse[i] = *friend.ToFriendResponse()
+	for _, friend := range friends {
+		friendsResponse = append(friendsResponse, *friend.ToFriendResponse())
 	}
 
 	return friendsResponse, nil

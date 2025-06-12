@@ -28,11 +28,12 @@ type CreateSubscriptionPayload struct {
 }
 
 type SubscriptionResponse struct {
-	ID         uuid.UUID `json:"id"`
-	Name       string    `json:"name"`
-	TotalPrice float64   `json:"total_price"`
-	DueDay     int       `json:"due_day"`
-	CreatedAt  time.Time `json:"created_at"`
+	ID         uuid.UUID        `json:"id"`
+	Name       string           `json:"name"`
+	TotalPrice float64          `json:"total_price"`
+	DueDay     int              `json:"due_day"`
+	Friends    []FriendResponse `json:"friends"`
+	CreatedAt  time.Time        `json:"created_at"`
 }
 
 func (p *CreateSubscriptionPayload) ToSubscription() *Subscription {
@@ -44,11 +45,17 @@ func (p *CreateSubscriptionPayload) ToSubscription() *Subscription {
 }
 
 func (s *Subscription) ToSubscriptionResponse() *SubscriptionResponse {
+	friendsResponse := make([]FriendResponse, 0, len(s.Friends))
+	for _, friend := range s.Friends {
+		friendsResponse = append(friendsResponse, *friend.ToFriendResponse())
+	}
+
 	return &SubscriptionResponse{
 		ID:         s.ID,
 		Name:       s.Name,
 		TotalPrice: float64(s.TotalPriceInCents) / 100,
 		DueDay:     s.DueDay,
+		Friends:    friendsResponse,
 		CreatedAt:  s.CreatedAt,
 	}
 }
