@@ -30,6 +30,7 @@ import {
 import toast from "react-hot-toast";
 import { queryKeys } from "@/lib/query-keys";
 import type { GetAllSubscriptionsResponse } from "@/api/get-all-subscriptions";
+import { Loader2 } from "lucide-react";
 
 const createSubscriptionSchema = z.object({
   name: z.string().min(1, {
@@ -104,6 +105,8 @@ export function CreateSubscriptionSheetForm({
 
   const dayOptions = Array.from({ length: 31 }, (_, i) => i + 1);
 
+  const { isSubmitting } = form.formState;
+
   return (
     <>
       <Form {...form}>
@@ -119,7 +122,11 @@ export function CreateSubscriptionSheetForm({
               <FormItem>
                 <FormLabel>Service Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Subscription name" {...field} />
+                  <Input
+                    placeholder="Subscription name"
+                    {...field}
+                    disabled={isSubmitting}
+                  />
                 </FormControl>
                 <FormDescription>
                   This is the name of your subscription.
@@ -141,6 +148,7 @@ export function CreateSubscriptionSheetForm({
                     step="0.01"
                     placeholder="19.99"
                     {...field}
+                    disabled={isSubmitting}
                   />
                 </FormControl>
                 <FormMessage />
@@ -157,6 +165,7 @@ export function CreateSubscriptionSheetForm({
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value?.toString()}
+                  disabled={isSubmitting}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -190,11 +199,23 @@ export function CreateSubscriptionSheetForm({
           variant="outline"
           onClick={onClose}
           className="mb-2"
+          disabled={isSubmitting}
         >
           Cancel
         </Button>
-        <Button type="submit" form="create-subscription-form">
-          Save changes
+        <Button
+          type="submit"
+          form="create-subscription-form"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Creating...
+            </>
+          ) : (
+            "Create Subscription"
+          )}
         </Button>
       </SheetFooter>
     </>

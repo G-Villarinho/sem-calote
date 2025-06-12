@@ -1,7 +1,6 @@
 import { api } from "@/lib/axios";
 
 export interface GetAllSubscriptionsQueryParams {
-  subscriptionId: string;
   withFriends?: boolean | null;
 }
 
@@ -16,11 +15,10 @@ export interface GetAllSubscriptionsResponse {
 }
 
 export async function getAllSubscriptions({
-  subscriptionId,
   withFriends = false,
 }: GetAllSubscriptionsQueryParams): Promise<GetAllSubscriptionsResponse[]> {
   const response = await api.get<GetAllSubscriptionsResponse[]>(
-    `/subscriptions/${subscriptionId}`,
+    "/subscriptions",
     {
       params: {
         withFriends,
