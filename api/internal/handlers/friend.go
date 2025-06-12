@@ -12,6 +12,8 @@ import (
 type FriendHandler interface {
 	CreateFriend(ectx echo.Context) error
 	GetAllFriends(ectx echo.Context) error
+	DeleteFriend(ectx echo.Context) error
+	UpdateFriend(ectx echo.Context) error
 }
 
 type friendHandler struct {
@@ -31,7 +33,7 @@ func (h *friendHandler) CreateFriend(ectx echo.Context) error {
 		slog.String("method", "CreateEmployee"),
 	)
 
-	var payload models.CreateFriendPayload
+	var payload models.FriendPayload
 	if err := ectx.Bind(&payload); err != nil {
 		logger.Warn("bind payload", slog.Any("error", err))
 		return echo.ErrBadRequest
@@ -66,4 +68,67 @@ func (h *friendHandler) GetAllFriends(ectx echo.Context) error {
 	}
 
 	return ectx.JSON(http.StatusOK, friends)
+}
+
+func (h *friendHandler) DeleteFriend(ectx echo.Context) error {
+	logger := slog.With(
+		slog.String("handler", "friend"),
+		slog.String("method", "DeleteFriend"),
+	)
+
+	id := ectx.Param("friendId")
+	if id == "" {
+		logger.Warn("missing friend ID")
+		return echo.ErrBadRequest
+	}
+
+	if err := h.fs.DeleteFriendByID(ectx.Request().Context(), id); err != nil {
+		if err == models.ErrFriendNotFound {
+			logger.Warn("friend not found", slog.Any("error", err))
+			return echo.ErrNotFound
+		}
+
+		logger.Error("delete friend", slog.Any("error", err))
+		return echo.ErrInternalServerError
+	}
+
+	return ectx.NoContent(http.StatusNoContent)
+}
+
+func (h *friendHandler) UpdateFriend(ectx echo.Context) error {
+	logger := slog.With(
+		slog.String("handler", "friend"),
+		slog.String("method", "UpdateFriend"),
+	)
+
+	id := ectx.Param("friendId")
+	if id == "" {
+		logger.Warn("missing friend ID")
+		return echo.ErrBadRequest
+	}
+
+	var payload models.FriendPayload
+	if err := ectx.Bind(&payload); err != nil {
+		logger.Warn("bind payload", slog.Any("error", err))
+		return echo.ErrBadRequest
+	}
+
+	friend := payload.ToFriend()
+	resp, err := h.fs.UpdateFriend(ectx.Request().Context(), id, friend)
+	if err != nil {
+		if err == models.ErrFriendNotFound {
+			logger.Warn("friend not found", slog.Any("error", err))
+			return echo.ErrNotFound
+		}
+
+		if err == models.ErrAlreadyExists {
+			logger.Warn("friend already exists", slog.Any("error", err))
+			return echo.ErrConflict
+		}
+
+		logger.Error("update friend", slog.Any("error", err))
+		return echo.ErrInternalServerError
+	}
+
+	return ectx.JSON(http.StatusOK, resp)
 }

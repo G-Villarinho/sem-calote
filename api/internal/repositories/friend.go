@@ -14,6 +14,8 @@ type FriendRepository interface {
 	GetAllFriends(ctx context.Context) ([]*models.Friend, error)
 	GetFriendByID(ctx context.Context, id string) (*models.Friend, error)
 	GetFriendByEmail(ctx context.Context, email string) (*models.Friend, error)
+	UpdateFriend(ctx context.Context, friend *models.Friend) error
+	DeleteFriendByID(ctx context.Context, id string) error
 }
 
 type friendRepository struct {
@@ -73,4 +75,43 @@ func (r *friendRepository) GetFriendByEmail(ctx context.Context, email string) (
 		return nil, err
 	}
 	return &friend, nil
+}
+
+func (r *friendRepository) UpdateFriend(ctx context.Context, friend *models.Friend) error {
+	updateData := map[string]any{
+		"name":       friend.Name,
+		"email":      friend.Email,
+		"updated_at": time.Now().UTC(),
+	}
+
+	result := r.db.WithContext(ctx).
+		Model(&models.Friend{}).
+		Where("id = ?", friend.ID).
+		Updates(updateData)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return models.ErrNotFound
+	}
+
+	return nil
+}
+
+func (r *friendRepository) DeleteFriendByID(ctx context.Context, id string) error {
+	result := r.db.WithContext(ctx).
+		Where("id = ?", id).
+		Delete(&models.Friend{})
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return models.ErrFriendNotFound
+	}
+
+	return nil
 }

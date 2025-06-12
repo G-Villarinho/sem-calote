@@ -33,6 +33,8 @@ func setupInternalRoutes(group *echo.Group) {
 func setupFriendRoutes(group *echo.Group, h handlers.FriendHandler) {
 	group.POST("/friends", h.CreateFriend)
 	group.GET("/friends", h.GetAllFriends)
+	group.DELETE("/friends/:friendId", h.DeleteFriend)
+	group.PUT("/friends/:friendId", h.UpdateFriend)
 }
 
 func setupSubscriptionRoutes(group *echo.Group, h handlers.SubscriptionHandler) {

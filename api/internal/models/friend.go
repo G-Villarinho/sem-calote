@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"errors"
 	"time"
 
@@ -16,9 +17,10 @@ type Friend struct {
 	Name      string
 	Email     string
 	CreatedAt time.Time
+	UpdatedAt sql.NullTime
 }
 
-type CreateFriendPayload struct {
+type FriendPayload struct {
 	Name  string `json:"name" validate:"required"`
 	Email string `json:"email" validate:"required,email"`
 }
@@ -30,7 +32,7 @@ type FriendResponse struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-func (p *CreateFriendPayload) ToFriend() *Friend {
+func (p *FriendPayload) ToFriend() *Friend {
 	return &Friend{
 		Name:  p.Name,
 		Email: p.Email,

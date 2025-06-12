@@ -50,6 +50,12 @@ migrate-down: ## Reverte a última migração aplicada no banco de dados SQLite
 	@echo "Revertendo migração (down) em $(DB_FILE)..."
 	@migrate -database "$(DATABASE_URL)" -path $(MIGRATIONS_PATH) down
 
+.PHONY: migrate-force
+migrate-force: ## Força uma versão da migração (CUIDADO). Ex: make migrate-force v=4
+	@echo "Forçando a versão $(v)..."
+	@migrate -database "$(DATABASE_URL)" -path $(MIGRATIONS_PATH) force $(v)
+
+
 # --- Ajuda ---
 
 .PHONY: help
