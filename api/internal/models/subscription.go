@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/g-villarinho/sem-calote/api/internal/billing"
 	"github.com/google/uuid"
 )
 
@@ -28,12 +29,14 @@ type CreateSubscriptionPayload struct {
 }
 
 type SubscriptionResponse struct {
-	ID         uuid.UUID        `json:"id"`
-	Name       string           `json:"name"`
-	TotalPrice float64          `json:"total_price"`
-	DueDay     int              `json:"due_day"`
-	Friends    []FriendResponse `json:"friends"`
-	CreatedAt  time.Time        `json:"created_at"`
+	ID              uuid.UUID        `json:"id"`
+	Name            string           `json:"name"`
+	TotalPrice      float64          `json:"total_price"`
+	NextBillingDate time.Time        `json:"next_billing_date"`
+	DaysLeft        int              `json:"days_left"`
+	DueDay          int              `json:"due_day"`
+	Friends         []FriendResponse `json:"friends"`
+	CreatedAt       time.Time        `json:"created_at"`
 }
 
 func (p *CreateSubscriptionPayload) ToSubscription() *Subscription {
@@ -50,12 +53,17 @@ func (s *Subscription) ToSubscriptionResponse() *SubscriptionResponse {
 		friendsResponse = append(friendsResponse, *friend.ToFriendResponse())
 	}
 
+	nextBillingDate := billing.CalculateNextDate(s.CreatedAt, s.DueDay)
+	daysLeft := billing.CalculateDaysLeft(nextBillingDate)
+
 	return &SubscriptionResponse{
-		ID:         s.ID,
-		Name:       s.Name,
-		TotalPrice: float64(s.TotalPriceInCents) / 100,
-		DueDay:     s.DueDay,
-		Friends:    friendsResponse,
-		CreatedAt:  s.CreatedAt,
+		ID:              s.ID,
+		Name:            s.Name,
+		TotalPrice:      float64(s.TotalPriceInCents) / 100,
+		NextBillingDate: nextBillingDate,
+		DaysLeft:        daysLeft,
+		DueDay:          s.DueDay,
+		Friends:         friendsResponse,
+		CreatedAt:       s.CreatedAt,
 	}
 }
