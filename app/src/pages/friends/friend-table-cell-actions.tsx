@@ -16,6 +16,7 @@ import { deleteFriend } from "@/api/delete-friend";
 import toast from "react-hot-toast";
 import { queryKeys } from "@/lib/query-keys";
 import type { GetAllFriendsResponse } from "@/api/get-all-friends";
+import { ConfirmDialog } from "@/components/dialogs/Confirm";
 
 interface FriendTableCellActionsProps {
   friendId: string;
@@ -27,6 +28,7 @@ export function FriendTableCellActions({
   const queryClient = useQueryClient();
 
   const [isUpdateSheetOpen, setIsUpdateSheetOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   function handleUpdateFriendCache() {
     const friendsQueryKey = queryKeys.friends.all();
@@ -65,8 +67,19 @@ export function FriendTableCellActions({
     );
   }
 
+  function handleOpenDeleteDialog(e: React.MouseEvent) {
+    e.stopPropagation();
+    setIsDeleteDialogOpen(true);
+  }
+
   return (
     <>
+      <ConfirmDialog
+        onConfirm={handleDeleteFriend}
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        description="All subscriptions associated with this friend will be deleted. Are you sure you want to delete this friend?"
+      />
       <UpdateFriendSheet
         open={isUpdateSheetOpen}
         onOpenChange={setIsUpdateSheetOpen}
@@ -91,7 +104,7 @@ export function FriendTableCellActions({
           </DropdownMenuItem>
           <DropdownMenuItem
             className="cursor-pointer text-red-500 focus:text-red-500"
-            onClick={() => handleDeleteFriend()}
+            onClick={handleOpenDeleteDialog}
           >
             <Trash2 className="mr-2 h-4 w-4" />
             <span>Delete</span>

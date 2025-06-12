@@ -74,7 +74,6 @@ export function UpdateFriendSheetForm({
   });
 
   async function handleUpdateFriend(values: UpdateFriendFormValues) {
-    console.log(friend.id);
     await updateFriendFn(
       { friendId: friend.id, ...values },
       {
