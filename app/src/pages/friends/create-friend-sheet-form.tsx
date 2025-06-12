@@ -15,6 +15,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createFriend, type CreateFriendResponse } from "@/api/create-friend";
+import { queryKeys } from "@/lib/query-keys";
+import type { GetAllFriendsResponse } from "@/api/get-all-friends";
+import { isAxiosError } from "axios";
 
 const CreateFriendFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -30,6 +35,7 @@ interface CreateFriendSheetFormProps {
 export function CreateFriendSheetForm({
   onOpenChange,
 }: CreateFriendSheetFormProps) {
+  const queryClient = useQueryClient();
   const form = useForm<CreateFriendFormValues>({
     resolver: zodResolver(CreateFriendFormSchema),
     defaultValues: {
@@ -38,16 +44,41 @@ export function CreateFriendSheetForm({
     },
   });
 
-  const { isSubmitting } = form.formState;
+  function updateFriendsCache(newFriend: CreateFriendResponse) {
+    const friendsQueryKey = queryKeys.friends.all();
+    const previousFriends =
+      queryClient.getQueryData<GetAllFriendsResponse[]>(friendsQueryKey);
+
+    const updatedFriends = previousFriends
+      ? [newFriend, ...previousFriends]
+      : [newFriend];
+
+    queryClient.setQueryData(friendsQueryKey, updatedFriends);
+  }
+
+  const { mutateAsync: createFriendFn } = useMutation({
+    mutationFn: createFriend,
+  });
 
   async function handleCreateFriend(values: CreateFriendFormValues) {
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    console.log("Friend created:", values);
-
-    form.reset();
-    onOpenChange(false);
-    toast.success("Friend added successfully!");
+    await createFriendFn(values, {
+      onSuccess: (newFriend) => {
+        updateFriendsCache(newFriend);
+        onOpenChange(false);
+        toast.success("Friend created successfully!");
+      },
+      onError: (error) => {
+        if (isAxiosError(error) && error.response?.status === 409) {
+          form.setError("email", {
+            type: "manual",
+            message: "There is already a friend with that email address.",
+          });
+        }
+      },
+    });
   }
+
+  const { isSubmitting } = form.formState;
 
   return (
     <>

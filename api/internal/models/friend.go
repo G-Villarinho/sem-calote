@@ -24,9 +24,10 @@ type CreateFriendPayload struct {
 }
 
 type FriendResponse struct {
-	ID    uuid.UUID `json:"id"`
-	Name  string    `json:"name"`
-	Email string    `json:"email"`
+	ID        uuid.UUID `json:"id"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 func (p *CreateFriendPayload) ToFriend() *Friend {
@@ -38,8 +39,9 @@ func (p *CreateFriendPayload) ToFriend() *Friend {
 
 func (f *Friend) ToFriendResponse() *FriendResponse {
 	return &FriendResponse{
-		ID:    f.ID,
-		Name:  f.Name,
-		Email: f.Email,
+		ID:        f.ID,
+		Name:      f.Name,
+		Email:     f.Email,
+		CreatedAt: f.CreatedAt,
 	}
 }
