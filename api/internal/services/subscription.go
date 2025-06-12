@@ -9,30 +9,30 @@ import (
 
 type SubscriptionService interface {
 	CreateSubscription(ctx context.Context, subscription *models.Subscription) (*models.SubscriptionResponse, error)
-	GetAllSubscriptions(ctx context.Context) ([]models.SubscriptionResponse, error)
+	GetAllSubscriptions(ctx context.Context, withFriends bool) ([]models.SubscriptionResponse, error)
 }
 
 type subscriptionService struct {
-	sr repositories.SubscriptionRepository
+	subscriptionRepo repositories.SubscriptionRepository
 }
 
 func NewSubscriptionService(
 	subscriptionsRepository repositories.SubscriptionRepository) SubscriptionService {
 	return &subscriptionService{
-		sr: subscriptionsRepository,
+		subscriptionRepo: subscriptionsRepository,
 	}
 }
 
 func (s *subscriptionService) CreateSubscription(ctx context.Context, subscription *models.Subscription) (*models.SubscriptionResponse, error) {
-	if err := s.sr.CreateSubscription(ctx, subscription); err != nil {
+	if err := s.subscriptionRepo.CreateSubscription(ctx, subscription); err != nil {
 		return nil, err
 	}
 
 	return subscription.ToSubscriptionResponse(), nil
 }
 
-func (s *subscriptionService) GetAllSubscriptions(ctx context.Context) ([]models.SubscriptionResponse, error) {
-	subscriptions, err := s.sr.GetAllSubscriptions(ctx)
+func (s *subscriptionService) GetAllSubscriptions(ctx context.Context, withFriends bool) ([]models.SubscriptionResponse, error) {
+	subscriptions, err := s.subscriptionRepo.GetAllSubscriptions(ctx, withFriends)
 	if err != nil {
 		return nil, err
 	}

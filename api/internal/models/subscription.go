@@ -1,17 +1,24 @@
 package models
 
 import (
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
 )
 
+var (
+	ErrSubscriptionNotFound = errors.New("subscription not found")
+)
+
 type Subscription struct {
-	ID                uuid.UUID
+	ID                uuid.UUID `gorm:"type:varchar(36);primaryKey;"`
 	Name              string
 	TotalPriceInCents int64
 	DueDay            int
 	CreatedAt         time.Time
+
+	Friends []*Friend `gorm:"many2many:family;"`
 }
 
 type CreateSubscriptionPayload struct {

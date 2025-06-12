@@ -14,18 +14,18 @@ type FriendService interface {
 }
 
 type friendService struct {
-	fr repositories.FriendRepository
+	friendRepo repositories.FriendRepository
 }
 
 func NewFriendService(
-	fr repositories.FriendRepository) FriendService {
+	friendRepo repositories.FriendRepository) FriendService {
 	return &friendService{
-		fr: fr,
+		friendRepo: friendRepo,
 	}
 }
 
 func (f *friendService) CreateFriend(ctx context.Context, friend *models.Friend) (*models.FriendResponse, error) {
-	friendFromEmail, err := f.fr.GetFriendByEmail(ctx, friend.Email)
+	friendFromEmail, err := f.friendRepo.GetFriendByEmail(ctx, friend.Email)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +34,7 @@ func (f *friendService) CreateFriend(ctx context.Context, friend *models.Friend)
 		return nil, models.ErrAlreadyExists
 	}
 
-	if err := f.fr.CreateFriend(ctx, friend); err != nil {
+	if err := f.friendRepo.CreateFriend(ctx, friend); err != nil {
 		return nil, err
 	}
 
@@ -42,7 +42,7 @@ func (f *friendService) CreateFriend(ctx context.Context, friend *models.Friend)
 }
 
 func (f *friendService) GetAllFriends(ctx context.Context) ([]models.FriendResponse, error) {
-	friends, err := f.fr.GetAllFriends(ctx)
+	friends, err := f.friendRepo.GetAllFriends(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func (f *friendService) GetAllFriends(ctx context.Context) ([]models.FriendRespo
 }
 
 func (f *friendService) GetFriendByID(ctx context.Context, id string) (*models.Friend, error) {
-	friend, err := f.fr.GetFriendByID(ctx, id)
+	friend, err := f.friendRepo.GetFriendByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}

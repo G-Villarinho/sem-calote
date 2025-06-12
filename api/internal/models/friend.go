@@ -1,13 +1,18 @@
 package models
 
 import (
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
 )
 
+var (
+	ErrFriendNotFound = errors.New("friend not found")
+)
+
 type Friend struct {
-	ID        uuid.UUID
+	ID        uuid.UUID `gorm:"type:varchar(36);primaryKey;"`
 	Name      string
 	Email     string
 	CreatedAt time.Time

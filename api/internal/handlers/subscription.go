@@ -54,7 +54,9 @@ func (h *subscriptionHandler) GetAllSubscriptions(ectx echo.Context) error {
 		slog.String("method", "GetAllSubscriptions"),
 	)
 
-	subscriptions, err := h.ss.GetAllSubscriptions(ectx.Request().Context())
+	withFriends := ectx.QueryParam("with_friends") == "true"
+
+	subscriptions, err := h.ss.GetAllSubscriptions(ectx.Request().Context(), withFriends)
 	if err != nil {
 		logger.Error("get all subscriptions", "error", err)
 		return echo.ErrInternalServerError

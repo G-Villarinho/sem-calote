@@ -11,7 +11,7 @@ import (
 
 type SubscriptionRepository interface {
 	CreateSubscription(ctx context.Context, subscription *models.Subscription) error
-	GetAllSubscriptions(ctx context.Context) ([]models.Subscription, error)
+	GetAllSubscriptions(ctx context.Context, withFriends bool) ([]models.Subscription, error)
 	GetSubscriptionByID(ctx context.Context, id string) (*models.Subscription, error)
 }
 
@@ -41,13 +41,17 @@ func (r *subscriptionRepository) CreateSubscription(ctx context.Context, subscri
 	return nil
 }
 
-func (r *subscriptionRepository) GetAllSubscriptions(ctx context.Context) ([]models.Subscription, error) {
+func (r *subscriptionRepository) GetAllSubscriptions(ctx context.Context, withFriends bool) ([]models.Subscription, error) {
 	var subscriptions []models.Subscription
-	if err := r.db.WithContext(ctx).Find(&subscriptions).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, nil
-		}
 
+	query := r.db.WithContext(ctx)
+
+	if withFriends {
+		query = query.Preload("Friends")
+	}
+
+	err := query.Find(&subscriptions).Error
+	if err != nil {
 		return nil, err
 	}
 
@@ -61,6 +65,20 @@ func (r *subscriptionRepository) GetSubscriptionByID(ctx context.Context, id str
 			return nil, nil
 		}
 
+		return nil, err
+	}
+
+	return &subscription, nil
+}
+
+func (r *subscriptionRepository) GetSubscriptionByIDWithFriends(ctx context.Context, id string) (*models.Subscription, error) {
+	var subscription models.Subscription
+
+	err := r.db.WithContext(ctx).
+		Preload("Friends").
+		First(&subscription, "id = ?", id).Error
+
+	if err != nil {
 		return nil, err
 	}
 
