@@ -25,11 +25,18 @@ export function Navbar() {
                 <span>Friends</span>
               </Link>
             </Button>
-            <div className="h-5 w-px bg-border" />
+            <div className="h-6 w-px bg-border" />
             <Button variant="ghost" size="sm" asChild>
               <Link to="/subscriptions" className="flex items-center gap-x-2">
                 <CreditCard className="size-4" />
                 <span>Subscription</span>
+              </Link>
+            </Button>
+            <div className="h-6 w-px bg-border" />
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/families" className="flex items-center gap-x-2">
+                <CreditCard className="size-4" />
+                <span>Families</span>
               </Link>
             </Button>
           </div>
