@@ -23,8 +23,7 @@ export interface UpdateSubscriptionResponse {
 export async function updateSubscription({
   subscriptionId,
   ...data
-}: UpdateSubscriptionRequest &
-  UpdateSubscriptionParams): Promise<UpdateSubscriptionResponse> {
+}: UpdateSubscriptionRequest & UpdateSubscriptionParams) {
   const response = await api.put<UpdateSubscriptionResponse>(
     `/subscriptions/${subscriptionId}`,
     data

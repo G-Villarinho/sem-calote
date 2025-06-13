@@ -6,31 +6,24 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
-import { Loader2 } from "lucide-react";
-import { getAllSubscriptions } from "@/api/get-all-subscriptions";
-import { queryKeys } from "@/lib/query-keys";
-import { useQuery } from "@tanstack/react-query";
 import { UpdateSubscriptionSheetForm } from "./update-subscription-sheet-form";
 
 interface UpdateSubscriptionSheetProps {
-  subscriptionId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  subscription: {
+    id: string;
+    name: string;
+    total_price: number;
+    due_day: number;
+  };
 }
 
 export function UpdateSubscriptionSheet({
-  subscriptionId,
+  subscription,
   open,
   onOpenChange,
 }: UpdateSubscriptionSheetProps) {
-  const { data: subscriptionToUpdate, isLoading } = useQuery({
-    queryKey: queryKeys.subscriptions.all(),
-    queryFn: () => getAllSubscriptions({}),
-    select: (subscriptions) =>
-      subscriptions.find((sub) => sub.id === subscriptionId),
-    enabled: !!subscriptionId,
-  });
-
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent>
@@ -41,17 +34,13 @@ export function UpdateSubscriptionSheet({
           </SheetDescription>
         </SheetHeader>
 
-        {isLoading && <Loader2 className="animate-spin mx-auto mt-8" />}
-
-        {subscriptionToUpdate ? (
+        {subscription ? (
           <UpdateSubscriptionSheetForm
             onClose={() => onOpenChange(false)}
-            subscription={subscriptionToUpdate}
+            subscription={subscription}
           />
         ) : (
-          !isLoading && (
-            <p className="text-center mt-8">Subscription not found.</p>
-          )
+          <p className="text-center mt-8">Subscription not found.</p>
         )}
       </SheetContent>
     </Sheet>

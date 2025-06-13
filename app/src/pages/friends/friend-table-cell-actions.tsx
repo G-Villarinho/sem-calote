@@ -19,11 +19,15 @@ import type { GetAllFriendsResponse } from "@/api/get-all-friends";
 import { ConfirmDialog } from "@/components/dialogs/Confirm";
 
 interface FriendTableCellActionsProps {
-  friendId: string;
+  friend: {
+    id: string;
+    name: string;
+    email: string;
+  };
 }
 
 export function FriendTableCellActions({
-  friendId,
+  friend,
 }: FriendTableCellActionsProps) {
   const queryClient = useQueryClient();
 
@@ -40,7 +44,7 @@ export function FriendTableCellActions({
           return [];
         }
 
-        return oldData.filter((friend) => friend.id !== friendId);
+        return oldData.filter((f) => f.id !== friend.id);
       }
     );
   }
@@ -51,7 +55,7 @@ export function FriendTableCellActions({
 
   async function handleDeleteFriend() {
     await deleteFriendMutate(
-      { friendId },
+      { friendId: friend.id },
       {
         onSuccess: () => {
           setIsUpdateSheetOpen(false);
@@ -83,7 +87,7 @@ export function FriendTableCellActions({
       <UpdateFriendSheet
         open={isUpdateSheetOpen}
         onOpenChange={setIsUpdateSheetOpen}
-        friendId={friendId}
+        friend={friend}
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

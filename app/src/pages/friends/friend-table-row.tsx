@@ -68,7 +68,7 @@ export function FriendTableRow({ friend }: FriendTableRowProps) {
       </TableCell>
       <TableCell>{formattedDate}</TableCell>
       <TableCell className="text-right">
-        <FriendTableCellActions friendId={friend.id} />
+        <FriendTableCellActions friend={friend} />
       </TableCell>
     </TableRow>
   );

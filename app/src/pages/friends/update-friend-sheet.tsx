@@ -5,30 +5,23 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { useQuery } from "@tanstack/react-query";
-import { queryKeys } from "@/lib/query-keys";
-import { getAllFriends } from "@/api/get-all-friends";
 import { UpdateFriendSheetForm } from "./update-friend-sheet-form";
-import { Loader2 } from "lucide-react";
 
 interface UpdateFriendSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  friendId: string;
+  friend: {
+    id: string;
+    name: string;
+    email: string;
+  };
 }
 
 export function UpdateFriendSheet({
   open,
   onOpenChange,
-  friendId,
+  friend,
 }: UpdateFriendSheetProps) {
-  const { data: friendToUpdate, isLoading } = useQuery({
-    queryKey: queryKeys.friends.all(),
-    queryFn: getAllFriends,
-    select: (friends) => friends.find((friend) => friend.id === friendId),
-    enabled: !!friendId,
-  });
-
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent>
@@ -39,16 +32,7 @@ export function UpdateFriendSheet({
           </SheetDescription>
         </SheetHeader>
 
-        {isLoading && <Loader2 className="animate-spin mx-auto mt-8" />}
-
-        {friendToUpdate ? (
-          <UpdateFriendSheetForm
-            onOpenChange={onOpenChange}
-            friend={friendToUpdate}
-          />
-        ) : (
-          !isLoading && <p className="text-center mt-8">Friend not found.</p>
-        )}
+        <UpdateFriendSheetForm onOpenChange={onOpenChange} friend={friend} />
       </SheetContent>
     </Sheet>
   );

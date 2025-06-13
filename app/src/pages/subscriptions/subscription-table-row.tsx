@@ -73,7 +73,7 @@ export function SubscriptionTableRow({
         </Badge>
       </TableCell>
       <TableCell>
-        <SubscriptionTableCellActions subscriptionId={subscription.id} />
+        <SubscriptionTableCellActions subscription={subscription} />
       </TableCell>
     </TableRow>
   );

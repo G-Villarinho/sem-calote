@@ -41,6 +41,7 @@ export function UpdateFriendSheetForm({
   onOpenChange,
   friend,
 }: UpdateFriendSheetFormProps) {
+  console.log("UpdateFriendSheetForm rendered with friend:", friend);
   const queryClient = useQueryClient();
   const form = useForm<UpdateFriendFormValues>({
     resolver: zodResolver(UpdateFriendFormSchema),

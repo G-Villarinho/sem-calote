@@ -19,11 +19,16 @@ import { deleteSubscription } from "@/api/delete-subscripton";
 import { UpdateSubscriptionSheet } from "./update-subscription-sheet";
 
 interface SubscriptionTableCellActionsProps {
-  subscriptionId: string;
+  subscription: {
+    id: string;
+    name: string;
+    total_price: number;
+    due_day: number;
+  };
 }
 
 export function SubscriptionTableCellActions({
-  subscriptionId,
+  subscription,
 }: SubscriptionTableCellActionsProps) {
   const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -40,9 +45,7 @@ export function SubscriptionTableCellActions({
           return [];
         }
 
-        return oldData.filter(
-          (subscription) => subscription.id !== subscriptionId
-        );
+        return oldData.filter((sub) => sub.id !== subscription.id);
       }
     );
   }
@@ -53,7 +56,7 @@ export function SubscriptionTableCellActions({
 
   async function handleDeleteSubscription() {
     await deleteSubscriptionMutation(
-      { subscriptionId },
+      { subscriptionId: subscription.id },
       {
         onSuccess: () => {
           setIsDeleteDialogOpen(false);
@@ -83,7 +86,7 @@ export function SubscriptionTableCellActions({
         description="All families associated with this subscription will be deleted. Are you sure you want to delete this subscription?"
       />
       <UpdateSubscriptionSheet
-        subscriptionId={subscriptionId}
+        subscription={subscription}
         open={isEditSheetOpen}
         onOpenChange={setIsEditSheetOpen}
       />
