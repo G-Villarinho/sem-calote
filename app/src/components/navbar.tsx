@@ -1,7 +1,6 @@
 import { Users, CreditCard, Menu } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
 
 export function Navbar() {
@@ -19,13 +18,14 @@ export function Navbar() {
           </Link>
 
           <div className="hidden md:flex items-center gap-x-1">
+            <div className="h-6 w-px bg-border" />
             <Button variant="ghost" size="sm" asChild>
               <Link to="/friends" className="flex items-center gap-x-2">
                 <Users className="size-4" />
                 <span>Friends</span>
               </Link>
             </Button>
-            <Separator orientation="vertical" className="h-5" />
+            <div className="h-5 w-px bg-border" />
             <Button variant="ghost" size="sm" asChild>
               <Link to="/subscriptions" className="flex items-center gap-x-2">
                 <CreditCard className="size-4" />
