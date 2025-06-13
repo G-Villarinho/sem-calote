@@ -19,17 +19,23 @@ type Family struct {
 }
 
 type CreateFamilyPayload struct {
-	FriendID uuid.UUID `json:"friend_id" validate:"required,uuid"`
+	FriendIDs []uuid.UUID `json:"friend_ids" validate:"required,gt=0,dive,uuid"`
 }
 
-func (p *CreateFamilyPayload) ToFamily(subscriptionID string) (*Family, error) {
+func (p *CreateFamilyPayload) ToFamilies(subscriptionID string) ([]*Family, error) {
 	subID, err := uuid.Parse(subscriptionID)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Family{
-		SubscriptionID: subID,
-		FriendID:       p.FriendID,
-	}, nil
+	var families []*Family
+	for _, friendID := range p.FriendIDs {
+		family := &Family{
+			SubscriptionID: subID,
+			FriendID:       friendID,
+		}
+		families = append(families, family)
+	}
+
+	return families, nil
 }

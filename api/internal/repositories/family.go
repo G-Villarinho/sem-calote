@@ -9,7 +9,7 @@ import (
 )
 
 type FamilyRepository interface {
-	CreateFamily(ctx context.Context, family *models.Family) error
+	CreateFamilies(ctx context.Context, families []*models.Family) error
 	DeleteFamily(ctx context.Context, friendID, subscriptionID string) error
 }
 
@@ -23,10 +23,10 @@ func NewFamilyRepository(db *gorm.DB) FamilyRepository {
 	}
 }
 
-func (r *familyRepository) CreateFamily(ctx context.Context, family *models.Family) error {
+func (r *familyRepository) CreateFamilies(ctx context.Context, families []*models.Family) error {
 	err := r.db.WithContext(ctx).
 		Clauses(clause.OnConflict{DoNothing: true}).
-		Create(family).Error
+		Create(families).Error
 
 	if err != nil {
 		return err

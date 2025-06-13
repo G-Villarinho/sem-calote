@@ -10,7 +10,7 @@ import (
 )
 
 type FamilyService interface {
-	CreateFamily(ctx context.Context, family *models.Family) error
+	CreateFamilies(ctx context.Context, families []*models.Family) error
 	DeleteFamily(ctx context.Context, friendID, subscriptionID string) error
 }
 
@@ -31,27 +31,34 @@ func NewFamilyService(
 	}
 }
 
-func (f *familyService) CreateFamily(ctx context.Context, family *models.Family) error {
-	friend, err := f.friendRepo.GetFriendByID(ctx, family.FriendID.String())
-	if err != nil {
-		return fmt.Errorf("get friend by ID %s: %w", family.FriendID.String(), err)
+func (f *familyService) CreateFamilies(ctx context.Context, families []*models.Family) error {
+	if len(families) == 0 {
+		return nil
 	}
 
-	if friend == nil {
-		return models.ErrFriendNotFound
-	}
-
-	subscription, err := f.subscriptionRepo.GetSubscriptionByID(ctx, family.SubscriptionID.String(), false)
+	subscriptionID := families[0].SubscriptionID.String()
+	subscription, err := f.subscriptionRepo.GetSubscriptionByID(ctx, subscriptionID, false)
 	if err != nil {
-		return fmt.Errorf("get subscription by ID %s: %w", family.SubscriptionID.String(), err)
+		return fmt.Errorf("get subscription by ID %s: %w", subscriptionID, err)
 	}
 
 	if subscription == nil {
 		return models.ErrSubscriptionNotFound
 	}
 
-	if err := f.familyRepo.CreateFamily(ctx, family); err != nil {
-		return fmt.Errorf("create family: %w", err)
+	for _, family := range families {
+		friend, err := f.friendRepo.GetFriendByID(ctx, family.FriendID.String())
+		if err != nil {
+			return fmt.Errorf("get friend by ID %s: %w", family.FriendID.String(), err)
+		}
+
+		if friend == nil {
+			return fmt.Errorf("friend with id %s not found: %w", family.FriendID.String(), models.ErrFriendNotFound)
+		}
+	}
+
+	if err := f.familyRepo.CreateFamilies(ctx, families); err != nil {
+		return fmt.Errorf("create families batch: %w", err)
 	}
 
 	return nil

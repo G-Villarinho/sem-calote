@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"log/slog"
 	"net/http"
 
@@ -39,24 +40,24 @@ func (h *familyHandler) AddFamilyMember(ectx echo.Context) error {
 		return echo.ErrBadRequest
 	}
 
-	family, err := payload.ToFamily(subscriptionID)
+	families, err := payload.ToFamilies(subscriptionID)
 	if err != nil {
 		logger.Error("create family", "error", err)
 		return echo.ErrBadRequest
 	}
 
-	if err := h.fs.CreateFamily(ectx.Request().Context(), family); err != nil {
-		if err == models.ErrFriendNotFound {
-			logger.Error("create family", "error", err)
-			return echo.ErrNotFound
+	if err := h.fs.CreateFamilies(ectx.Request().Context(), families); err != nil {
+		if errors.Is(err, models.ErrSubscriptionNotFound) {
+			logger.Error("create families failed", "reason", "subscription not found", "error", err)
+			return echo.NewHTTPError(http.StatusNotFound, "Subscription not found")
 		}
 
-		if err == models.ErrSubscriptionNotFound {
-			logger.Error("create family", "error", err)
-			return echo.ErrNotFound
+		if errors.Is(err, models.ErrFriendNotFound) {
+			logger.Error("create families failed", "reason", "friend not found", "error", err)
+			return echo.NewHTTPError(http.StatusNotFound, "One or more friends not found")
 		}
 
-		logger.Error("create family", "error", err)
+		logger.Error("create families failed", "error", err)
 		return echo.ErrInternalServerError
 	}
 
