@@ -1,4 +1,4 @@
-import { Users, CreditCard, Menu } from "lucide-react";
+import { Users, CreditCard, Menu, Home } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -35,7 +35,7 @@ export function Navbar() {
             <div className="h-6 w-px bg-border" />
             <Button variant="ghost" size="sm" asChild>
               <Link to="/families" className="flex items-center gap-x-2">
-                <CreditCard className="size-4" />
+                <Home className="size-4" />
                 <span>Families</span>
               </Link>
             </Button>
