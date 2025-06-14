@@ -48,6 +48,15 @@ const updateSubscriptionSchema = z.object({
 
 type UpdateSubscriptionFormValues = z.infer<typeof updateSubscriptionSchema>;
 
+const dayOptions = Array.from({ length: 31 }, (_, i) => i + 1);
+
+const daySelectItems = dayOptions.map((day) => (
+  <SelectItem key={day} value={day.toString()}>
+    {day}
+    {getOrdinalSuffix(day)} of the month
+  </SelectItem>
+));
+
 interface UpdateSubscriptionSheetFormProps {
   onClose: () => void;
   subscription: {
@@ -110,8 +119,6 @@ export function UpdateSubscriptionSheetForm({
       }
     );
   }
-
-  const dayOptions = Array.from({ length: 31 }, (_, i) => i + 1);
 
   const { isSubmitting } = form.formState;
 
@@ -184,12 +191,7 @@ export function UpdateSubscriptionSheetForm({
                     position="popper"
                     className="w-full min-w-[8rem] max-h-72 overflow-y-auto"
                   >
-                    {dayOptions.map((day) => (
-                      <SelectItem key={day} value={day.toString()}>
-                        {day}
-                        {getOrdinalSuffix(day)} of the month
-                      </SelectItem>
-                    ))}
+                    {daySelectItems}
                   </SelectContent>
                 </Select>
                 <FormDescription>

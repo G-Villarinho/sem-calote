@@ -4,9 +4,9 @@ export const queryKeys = {
     detail: (friendId: string) => [...queryKeys.friends.all(), friendId],
   },
   subscriptions: {
-    all: () => ["subscriptions"],
-    detail: (subscriptionId: string) => [
-      ...queryKeys.subscriptions.all(),
+    all: (withFriends?: boolean | null) => ["subscriptions", withFriends],
+    detail: (subscriptionId: string, withFriends?: boolean | null) => [
+      ...queryKeys.subscriptions.all(withFriends),
       subscriptionId,
     ],
   },

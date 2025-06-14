@@ -13,9 +13,10 @@ interface FriendTableRowProps {
     email: string;
     created_at: string;
   };
+  className?: string;
 }
 
-export function FriendTableRow({ friend }: FriendTableRowProps) {
+export function FriendTableRow({ friend, className }: FriendTableRowProps) {
   const [isEmailVisible, setIsEmailVisible] = useState(false);
   const timerRef = useRef<number | null>(null);
 
@@ -42,7 +43,7 @@ export function FriendTableRow({ friend }: FriendTableRowProps) {
     : "N/A";
 
   return (
-    <TableRow className="hover:bg-muted/50">
+    <TableRow className={cn("hover:bg-muted/50", className)}>
       <TableCell className="font-medium">{friend.name}</TableCell>
       <TableCell>
         <div className="flex items-center gap-2">

@@ -118,3 +118,17 @@
     @apply bg-background text-foreground;
   }
 }
+
+@theme {
+  --animate-fadeIn: fadeIn 0.5s ease-in-out;
+
+  /* Definição dos keyframes para a animação fadeIn */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}

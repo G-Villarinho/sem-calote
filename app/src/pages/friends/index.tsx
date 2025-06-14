@@ -16,9 +16,12 @@ import { FriendTableRow } from "./friend-table-row";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/query-keys";
 import { getAllFriends } from "@/api/get-all-friends";
+import { FriendTableRowSkeleton } from "./friend-table-row-skeleton";
+
+const SKELETON_COUNT = 2;
 
 export function FriendsPage() {
-  const { data: friends } = useQuery({
+  const { data: friends, isLoading } = useQuery({
     queryKey: queryKeys.friends.all(),
     queryFn: () => getAllFriends(),
     refetchOnWindowFocus: false,
@@ -35,7 +38,7 @@ export function FriendsPage() {
         <CreateFriendSheet />
       </Heading>
 
-      <Card className="border-border/40 shadow-sm mt-8">
+      <Card className="border-border/40 shadow-sm mt-8 overflow-hidden">
         <CardContent className="px-8">
           <Table>
             <TableHeader>
@@ -47,13 +50,22 @@ export function FriendsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
+              {isLoading &&
+                Array.from({ length: SKELETON_COUNT }).map((_, index) => (
+                  <FriendTableRowSkeleton key={index} />
+                ))}
+
               {friends &&
                 friends.map((friend) => (
-                  <FriendTableRow key={friend.id} friend={friend} />
+                  <FriendTableRow
+                    key={friend.id}
+                    friend={friend}
+                    className="animate-fadeIn"
+                  />
                 ))}
 
               {friends && friends.length === 0 && (
-                <TableRow>
+                <TableRow className="animate-fadeIn">
                   <TableCell colSpan={4} className="text-center">
                     No friends found. Add a new friend to get started!
                   </TableCell>

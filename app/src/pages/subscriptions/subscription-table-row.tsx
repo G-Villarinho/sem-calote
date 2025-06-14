@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { CreditCard, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { SubscriptionTableCellActions } from "./subscription-table-cell-action";
+import { cn } from "@/lib/utils";
 
 interface SubscriptionTableRowProps {
   subscription: {
@@ -14,10 +15,12 @@ interface SubscriptionTableRowProps {
     due_day: number;
     created_at: string;
   };
+  className?: string;
 }
 
 export function SubscriptionTableRow({
   subscription,
+  className,
 }: SubscriptionTableRowProps) {
   function formatDaysLeftText(daysLeft: number): string {
     switch (daysLeft) {
@@ -43,7 +46,7 @@ export function SubscriptionTableRow({
   }
 
   return (
-    <TableRow className="hover:bg-muted/50">
+    <TableRow className={cn("hover:bg-muted/50", className)}>
       <TableCell className="font-medium">
         <div className="flex items-center space-x-2">
           <CreditCard className="h-4 w-4 text-muted-foreground" />

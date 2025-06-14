@@ -6,6 +6,7 @@ import { AppLayout } from "@/pages/_layouts/app";
 // Pages
 import { FriendsPage } from "@/pages/friends";
 import { SubscriptionsPage } from "@/pages/subscriptions";
+import { FamiliesPage } from "@/pages/families";
 
 export const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ export const router = createBrowserRouter([
       {
         path: "subscriptions",
         element: <SubscriptionsPage />,
+      },
+      {
+        path: "families",
+        element: <FamiliesPage />,
       },
     ],
   },

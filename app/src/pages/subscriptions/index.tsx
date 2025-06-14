@@ -20,9 +20,10 @@ import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/query-keys";
 import { getAllSubscriptions } from "@/api/get-all-subscriptions";
 import { SubscriptionTableRow } from "./subscription-table-row";
+import { SubscriptionTableRowSkeleton } from "./subscription-table-row-skeleton";
 
 export function SubscriptionsPage() {
-  const { data: subscriptions } = useQuery({
+  const { data: subscriptions, isLoading } = useQuery({
     queryKey: queryKeys.subscriptions.all(),
     queryFn: () => getAllSubscriptions({}),
     refetchOnWindowFocus: false,
@@ -65,7 +66,7 @@ export function SubscriptionsPage() {
                 {subscriptions?.length} active subscription(s)
               </CardDescription>
             </div>
-            <CreateSubscriptionSheet />
+            <CreateSubscriptionSheet disabled={isLoading} />
           </div>
         </CardHeader>
         <CardContent className="px-4">
@@ -81,9 +82,15 @@ export function SubscriptionsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
+              {isLoading &&
+                Array.from({ length: 5 }).map((_, index) => (
+                  <SubscriptionTableRowSkeleton key={index} />
+                ))}
+
               {subscriptions &&
                 subscriptions.map((subscription) => (
                   <SubscriptionTableRow
+                    className="animate-fadeIn"
                     key={subscription.id}
                     subscription={subscription}
                   />
@@ -91,7 +98,7 @@ export function SubscriptionsPage() {
 
               {subscriptions && subscriptions.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center">
+                  <TableCell colSpan={4} className="text-center animate-fadeIn">
                     No subscriptions found. Add a new subscription to get
                     started!
                   </TableCell>

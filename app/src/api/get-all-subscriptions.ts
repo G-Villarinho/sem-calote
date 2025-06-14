@@ -12,6 +12,12 @@ export interface GetAllSubscriptionsResponse {
   days_left: number;
   due_day: number;
   created_at: string;
+  friends?: {
+    id: string;
+    name: string;
+    email: string;
+    created_at: string;
+  }[];
 }
 
 export async function getAllSubscriptions({

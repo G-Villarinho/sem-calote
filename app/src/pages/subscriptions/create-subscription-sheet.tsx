@@ -7,12 +7,24 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
-import { CreateSubscriptionSheetForm } from "./create-subscription-sheet-form";
+import { SubscriptionFormSkeleton } from "./subscription-form-skeleton";
 
-export function CreateSubscriptionSheet() {
+interface CreateSubscriptionSheetProps {
+  disabled?: boolean;
+}
+
+const CreateSubscriptionSheetForm = lazy(() =>
+  import("./create-subscription-sheet-form").then((module) => ({
+    default: module.CreateSubscriptionSheetForm,
+  }))
+);
+
+export function CreateSubscriptionSheet({
+  disabled = false,
+}: CreateSubscriptionSheetProps) {
   const [isCreateSubscriptionSheetOpen, setIsCreateSubscriptionSheetOpen] =
     useState(false);
 
@@ -22,7 +34,11 @@ export function CreateSubscriptionSheet() {
       onOpenChange={setIsCreateSubscriptionSheetOpen}
     >
       <SheetTrigger asChild>
-        <Button size="lg" className="mr-2">
+        <Button
+          size="lg"
+          className="mr-2 disabled:cursor-not-allowed"
+          disabled={disabled}
+        >
           <PlusCircle className="h-4 w-4" />
           <span>Add subscription</span>
         </Button>
@@ -35,9 +51,11 @@ export function CreateSubscriptionSheet() {
           </SheetDescription>
         </SheetHeader>
 
-        <CreateSubscriptionSheetForm
-          onClose={() => setIsCreateSubscriptionSheetOpen(false)}
-        />
+        <Suspense fallback={<SubscriptionFormSkeleton />}>
+          <CreateSubscriptionSheetForm
+            onClose={() => setIsCreateSubscriptionSheetOpen(false)}
+          />
+        </Suspense>
       </SheetContent>
     </Sheet>
   );

@@ -46,6 +46,6 @@ func setupSubscriptionRoutes(group *echo.Group, h handlers.SubscriptionHandler) 
 }
 
 func setupFamilyRoutes(group *echo.Group, h handlers.FamilyHandler) {
-	group.POST("/subscriptions/:subscriptionId/family", h.AddFamilyMember)
-	group.DELETE("/subscriptions/:subscriptionId/family/:friendId", h.RemoveFamilyMember)
+	group.POST("/subscriptions/:subscriptionId/family/members", h.AddFamilyMember)
+	group.DELETE("/subscriptions/:subscriptionId/family/members/:friendId", h.RemoveFamilyMember)
 }

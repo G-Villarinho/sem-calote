@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -49,6 +49,15 @@ const createSubscriptionSchema = z.object({
 });
 
 type CreateSubscriptionFormValues = z.infer<typeof createSubscriptionSchema>;
+
+const dayOptions = Array.from({ length: 31 }, (_, i) => i + 1);
+
+const daySelectItems = dayOptions.map((day) => (
+  <SelectItem key={day} value={day.toString()}>
+    {day}
+    {getOrdinalSuffix(day)} of the month
+  </SelectItem>
+));
 
 interface CreateSubscriptionSheetFormProps {
   onClose: () => void;
@@ -102,8 +111,6 @@ export function CreateSubscriptionSheetForm({
       }
     );
   }
-
-  const dayOptions = Array.from({ length: 31 }, (_, i) => i + 1);
 
   const { isSubmitting } = form.formState;
 
@@ -176,12 +183,7 @@ export function CreateSubscriptionSheetForm({
                     position="popper"
                     className="w-full min-w-[8rem] max-h-72 overflow-y-auto"
                   >
-                    {dayOptions.map((day) => (
-                      <SelectItem key={day} value={day.toString()}>
-                        {day}
-                        {getOrdinalSuffix(day)} of the month
-                      </SelectItem>
-                    ))}
+                    {daySelectItems}
                   </SelectContent>
                 </Select>
                 <FormDescription>

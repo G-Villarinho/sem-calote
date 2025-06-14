@@ -6,7 +6,14 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
-import { UpdateSubscriptionSheetForm } from "./update-subscription-sheet-form";
+import { lazy, Suspense } from "react";
+import { SubscriptionFormSkeleton } from "./subscription-form-skeleton";
+
+const UpdateSubscriptionSheetForm = lazy(() =>
+  import("./update-subscription-sheet-form").then((module) => ({
+    default: module.UpdateSubscriptionSheetForm,
+  }))
+);
 
 interface UpdateSubscriptionSheetProps {
   open: boolean;
@@ -34,14 +41,12 @@ export function UpdateSubscriptionSheet({
           </SheetDescription>
         </SheetHeader>
 
-        {subscription ? (
+        <Suspense fallback={<SubscriptionFormSkeleton />}>
           <UpdateSubscriptionSheetForm
             onClose={() => onOpenChange(false)}
             subscription={subscription}
           />
-        ) : (
-          <p className="text-center mt-8">Subscription not found.</p>
-        )}
+        </Suspense>
       </SheetContent>
     </Sheet>
   );
