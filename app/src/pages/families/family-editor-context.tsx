@@ -2,17 +2,17 @@ import type { Friend } from "@/api/types/friend";
 import { createContext, useContext, useState, type ReactNode } from "react";
 
 interface FamilyEditorContextType {
-  // Dados para renderizar as listas
+  // Data for rendering the lists
   availableFriends: Friend[];
   familyMembers: Friend[];
 
-  // Estado e handlers da lista de amigos disponíveis
+  // State and handlers for the available friends list
   selectedFriends: string[];
   toggleFriendSelection: (id: string) => void;
   addSelectedFriends: () => void;
   addAllFriends: () => void;
 
-  // Estado e handlers da lista de membros da família
+  // State and handlers for the family members list
   selectedMembers: string[];
   toggleMemberSelection: (id: string) => void;
   removeSelectedMembers: () => void;
@@ -45,32 +45,40 @@ export function FamilyEditorProvider({
   const [selectedFriends, setSelectedFriends] = useState<string[]>([]);
   const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
 
-  const toggleFriendSelection = (id: string) => {
+  function toggleFriendSelection(id: string) {
     setSelectedFriends((prev) =>
-      prev.includes(id) ? prev.filter((fId) => fId !== id) : [...prev, id]
+      prev.includes(id)
+        ? prev.filter((friendId) => friendId !== id)
+        : [...prev, id]
     );
-  };
-  const toggleMemberSelection = (id: string) => {
-    setSelectedMembers((prev) =>
-      prev.includes(id) ? prev.filter((mId) => mId !== id) : [...prev, id]
-    );
-  };
+  }
 
-  // Funções que chamam o pai e limpam o estado local
-  const addSelectedFriends = () => {
+  function toggleMemberSelection(id: string) {
+    setSelectedMembers((prev) =>
+      prev.includes(id)
+        ? prev.filter((memberId) => memberId !== id)
+        : [...prev, id]
+    );
+  }
+
+  // Functions that call the parent and clear local state
+  function addSelectedFriends() {
     onAddMembers(selectedFriends);
     setSelectedFriends([]);
-  };
-  const addAllFriends = () => {
+  }
+
+  function addAllFriends() {
     onAddAllMembers();
-  };
-  const removeSelectedMembers = () => {
+  }
+
+  function removeSelectedMembers() {
     onRemoveMembers(selectedMembers);
     setSelectedMembers([]);
-  };
-  const removeAllMembers = () => {
+  }
+
+  function removeAllMembers() {
     onRemoveAllMembers();
-  };
+  }
 
   const value = {
     availableFriends,
@@ -92,6 +100,7 @@ export function FamilyEditorProvider({
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useFamilyEditor() {
   const context = useContext(FamilyEditorContext);
   if (context === undefined) {

@@ -5,7 +5,7 @@ interface CreateFamilyParams {
 }
 
 interface CreateFamilyRequest {
-  friendsIds: string[];
+  friend_ids: string[];
 }
 
 export async function createFamily({
@@ -13,7 +13,7 @@ export async function createFamily({
   ...data
 }: CreateFamilyRequest & CreateFamilyParams): Promise<void> {
   const request: CreateFamilyRequest = {
-    friendsIds: data.friendsIds,
+    friend_ids: data.friend_ids,
   };
 
   await api.post(`/subscriptions/${subscriptionId}/family/members`, request);

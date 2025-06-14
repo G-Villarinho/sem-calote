@@ -11,7 +11,7 @@ export function FriendsDisplay({ friends }: FriendsDisplayProps) {
   return (
     <div className="space-y-2">
       <h3 className="text-sm font-medium">Family Members</h3>
-      <Card>
+      <Card className="border-dashed py-0">
         <ScrollArea className="h-[200px]">
           {friends.length > 0 && (
             <ul className="divide-y">
