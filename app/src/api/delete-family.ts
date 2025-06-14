@@ -5,7 +5,7 @@ export interface DeleteFamilyParams {
 }
 
 export interface DeleteFamilyRequest {
-  friendIds: string[];
+  friend_ids: string[];
 }
 
 export async function deleteFamily({
@@ -13,7 +13,7 @@ export async function deleteFamily({
   ...data
 }: DeleteFamilyRequest & DeleteFamilyParams): Promise<void> {
   const request: DeleteFamilyRequest = {
-    friendIds: data.friendIds,
+    friend_ids: data.friend_ids,
   };
 
   await api.delete(`/subscriptions/${subscriptionId}/family/members`, {

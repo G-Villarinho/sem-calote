@@ -19,7 +19,7 @@ type Subscription struct {
 	DueDay            int
 	CreatedAt         time.Time
 
-	Friends []*Friend `gorm:"many2many:family;"`
+	Friends []*Friend `gorm:"many2many:families;"`
 }
 
 type SubscriptionPayload struct {
