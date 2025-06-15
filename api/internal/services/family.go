@@ -2,7 +2,6 @@ package services
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/g-villarinho/sem-calote/api/internal/models"
@@ -10,8 +9,8 @@ import (
 )
 
 type FamilyService interface {
-	CreateFamilies(ctx context.Context, families []*models.Family) error
-	DeleteFamily(ctx context.Context, friendID, subscriptionID string) error
+	AddFamilyMembers(ctx context.Context, families []*models.Family) error
+	RemoveFamilyMembers(ctx context.Context, subscriptionID string, friendIDs []string) error
 }
 
 type familyService struct {
@@ -31,7 +30,7 @@ func NewFamilyService(
 	}
 }
 
-func (f *familyService) CreateFamilies(ctx context.Context, families []*models.Family) error {
+func (f *familyService) AddFamilyMembers(ctx context.Context, families []*models.Family) error {
 	if len(families) == 0 {
 		return nil
 	}
@@ -64,14 +63,13 @@ func (f *familyService) CreateFamilies(ctx context.Context, families []*models.F
 	return nil
 }
 
-func (f *familyService) DeleteFamily(ctx context.Context, friendID string, subscriptionID string) error {
-	err := f.familyRepo.DeleteFamily(ctx, friendID, subscriptionID)
-	if err != nil {
-		if errors.Is(err, models.ErrNotFound) {
-			return models.ErrFamilyAssociationNotFound
-		}
+func (f *familyService) RemoveFamilyMembers(ctx context.Context, subscriptionID string, friendIDs []string) error {
+	if len(friendIDs) == 0 {
+		return nil
+	}
 
-		return fmt.Errorf("delete family: %w", err)
+	if err := f.familyRepo.DeleteFamilies(ctx, subscriptionID, friendIDs); err != nil {
+		return fmt.Errorf("remove family members: %w", err)
 	}
 
 	return nil

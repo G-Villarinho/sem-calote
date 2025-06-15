@@ -11,6 +11,7 @@ import (
 type FamilyRepository interface {
 	CreateFamilies(ctx context.Context, families []*models.Family) error
 	DeleteFamily(ctx context.Context, friendID, subscriptionID string) error
+	DeleteFamilies(ctx context.Context, subscriptionID string, friendIds []string) error
 }
 
 type familyRepository struct {
@@ -30,6 +31,22 @@ func (r *familyRepository) CreateFamilies(ctx context.Context, families []*model
 
 	if err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (r *familyRepository) DeleteFamilies(ctx context.Context, subscriptionID string, friendIDs []string) error {
+	result := r.db.WithContext(ctx).
+		Where("subscription_id = ? AND friend_id IN (?)", subscriptionID, friendIDs).
+		Delete(&models.Family{})
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return models.ErrNotFound
 	}
 
 	return nil

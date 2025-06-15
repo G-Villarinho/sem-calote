@@ -34,7 +34,7 @@ func (h *familyHandler) AddFamilyMember(ectx echo.Context) error {
 
 	subscriptionID := ectx.Param("subscriptionId")
 
-	var payload models.CreateFamilyPayload
+	var payload models.AddFamilyMembersPayload
 	if err := ectx.Bind(&payload); err != nil {
 		logger.Error("bind payload", "error", err)
 		return echo.ErrBadRequest
@@ -46,7 +46,7 @@ func (h *familyHandler) AddFamilyMember(ectx echo.Context) error {
 		return echo.ErrBadRequest
 	}
 
-	if err := h.fs.CreateFamilies(ectx.Request().Context(), families); err != nil {
+	if err := h.fs.AddFamilyMembers(ectx.Request().Context(), families); err != nil {
 		if errors.Is(err, models.ErrSubscriptionNotFound) {
 			logger.Error("create families failed", "reason", "subscription not found", "error", err)
 			return echo.NewHTTPError(http.StatusNotFound, "Subscription not found")
@@ -71,9 +71,14 @@ func (h *familyHandler) RemoveFamilyMember(ectx echo.Context) error {
 	)
 
 	subscriptionID := ectx.Param("subscriptionId")
-	friendID := ectx.Param("friendId")
 
-	if err := h.fs.DeleteFamily(ectx.Request().Context(), friendID, subscriptionID); err != nil {
+	var payload models.AddFamilyMembersPayload
+	if err := ectx.Bind(&payload); err != nil {
+		logger.Error("bind payload", "error", err)
+		return echo.ErrBadRequest
+	}
+
+	if err := h.fs.RemoveFamilyMembers(ectx.Request().Context(), subscriptionID, payload.FriendIDs); err != nil {
 		if err == models.ErrFamilyAssociationNotFound {
 			logger.Error("remove family member", "error", err)
 			return echo.ErrNotFound

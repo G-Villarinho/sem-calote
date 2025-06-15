@@ -18,11 +18,15 @@ type Family struct {
 	Friend   Friend `gorm:"foreignKey:FriendID;references:ID"`
 }
 
-type CreateFamilyPayload struct {
-	FriendIDs []uuid.UUID `json:"friend_ids" validate:"required,gt=0,dive,uuid"`
+type AddFamilyMembersPayload struct {
+	FriendIDs []string `json:"friend_ids" validate:"required,gt=0,dive,uuid"`
 }
 
-func (p *CreateFamilyPayload) ToFamilies(subscriptionID string) ([]*Family, error) {
+type DeleteFamilyMembersPayload struct {
+	FamilyIDs []string `json:"family_ids" validate:"required,gt=0,dive,uuid"`
+}
+
+func (p *AddFamilyMembersPayload) ToFamilies(subscriptionID string) ([]*Family, error) {
 	subID, err := uuid.Parse(subscriptionID)
 	if err != nil {
 		return nil, err
@@ -30,9 +34,14 @@ func (p *CreateFamilyPayload) ToFamilies(subscriptionID string) ([]*Family, erro
 
 	var families []*Family
 	for _, friendID := range p.FriendIDs {
+		parsedFriendID, err := uuid.Parse(friendID)
+		if err != nil {
+			return nil, err
+		}
+
 		family := &Family{
 			SubscriptionID: subID,
-			FriendID:       friendID,
+			FriendID:       parsedFriendID,
 		}
 		families = append(families, family)
 	}
