@@ -1,18 +1,18 @@
 import { api } from "@/lib/axios";
 
-interface CreateFamilyParams {
+interface AddFamilyMemberParams {
   subscriptionId: string;
 }
 
-interface CreateFamilyRequest {
+interface AddFamilyMemberRequest {
   friend_ids: string[];
 }
 
-export async function createFamily({
+export async function addFamilyMember({
   subscriptionId,
   ...data
-}: CreateFamilyRequest & CreateFamilyParams): Promise<void> {
-  const request: CreateFamilyRequest = {
+}: AddFamilyMemberRequest & AddFamilyMemberParams): Promise<void> {
+  const request: AddFamilyMemberRequest = {
     friend_ids: data.friend_ids,
   };
 

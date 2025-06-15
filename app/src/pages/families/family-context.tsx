@@ -2,8 +2,8 @@ import { createContext, useState, type ReactNode } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
-import { createFamily } from "@/api/create-family";
-import { deleteFamily } from "@/api/delete-family";
+import { addFamilyMember } from "@/api/add-family-member";
+import { deleteFamilyMember } from "@/api/remove-family-member";
 import type { Friend } from "@/api/types/friend";
 import { queryKeys } from "@/lib/query-keys";
 import type { Subscription } from "@/api/types/subscription";
@@ -49,7 +49,7 @@ export function FamilyProvider({
   const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
 
   const { mutate: addMembers, isPending: isAdding } = useMutation({
-    mutationFn: createFamily,
+    mutationFn: addFamilyMember,
     onSuccess: (_, variables) => {
       const queryKey = queryKeys.subscriptions.all(true);
 
@@ -87,7 +87,7 @@ export function FamilyProvider({
   });
 
   const { mutate: removeMembers, isPending: isRemoving } = useMutation({
-    mutationFn: deleteFamily,
+    mutationFn: deleteFamilyMember,
     onSuccess: (_, variables) => {
       const queryKey = queryKeys.subscriptions.all(true);
 

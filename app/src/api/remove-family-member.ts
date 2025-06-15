@@ -1,18 +1,18 @@
 import { api } from "@/lib/axios";
 
-export interface DeleteFamilyParams {
+export interface FamilyMemberDeletionParams {
   subscriptionId: string;
 }
 
-export interface DeleteFamilyRequest {
+export interface RemoveFamilyMemberRequest {
   friend_ids: string[];
 }
 
-export async function deleteFamily({
+export async function deleteFamilyMember({
   subscriptionId,
   ...data
-}: DeleteFamilyRequest & DeleteFamilyParams): Promise<void> {
-  const request: DeleteFamilyRequest = {
+}: RemoveFamilyMemberRequest & FamilyMemberDeletionParams): Promise<void> {
+  const request: RemoveFamilyMemberRequest = {
     friend_ids: data.friend_ids,
   };
 
