@@ -26,7 +26,7 @@ export function FamilyManagementCard({
   const { familyMembers, isAdding, isRemoving } = useFamily();
 
   return (
-    <Card className="border-border/40 shadow-sm py-0">
+    <Card className="border-border/40 shadow-sm py-0 animate-fadeIn">
       <CardHeader className="bg-muted/50 ">
         <div className="flex items-center justify-between py-3">
           <div className="flex-1">
