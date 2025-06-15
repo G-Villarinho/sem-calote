@@ -85,15 +85,21 @@ export function FamilyManagement({
     });
   }
 
-  const toggleFriendSelection = (id: string) =>
-    setSelectedFriends((prev) =>
-      prev.includes(id) ? prev.filter((fId) => fId !== id) : [...prev, id]
+  function toggleFriendSelection(id: string) {
+    return setSelectedFriends((prev) =>
+      prev.includes(id)
+        ? prev.filter((friendId) => friendId !== id)
+        : [...prev, id]
     );
+  }
 
-  const toggleMemberSelection = (id: string) =>
-    setSelectedMembers((prev) =>
-      prev.includes(id) ? prev.filter((mId) => mId !== id) : [...prev, id]
+  function toggleMemberSelection(id: string) {
+    return setSelectedMembers((prev) =>
+      prev.includes(id)
+        ? prev.filter((memberId) => memberId !== id)
+        : [...prev, id]
     );
+  }
 
   return (
     <Card className="border-border/40 shadow-sm py-0">
