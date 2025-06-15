@@ -7,7 +7,7 @@ interface FriendsDisplayProps {
   friends: Friend[];
 }
 
-export function FriendsDisplay({ friends }: FriendsDisplayProps) {
+export function FamilyMembersDisplay({ friends }: FriendsDisplayProps) {
   return (
     <div className="space-y-2">
       <h3 className="text-sm font-medium">Family Members</h3>

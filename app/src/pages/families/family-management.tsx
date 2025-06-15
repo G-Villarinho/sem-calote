@@ -11,13 +11,13 @@ import {
 } from "@/components/ui/card";
 import { Edit } from "lucide-react";
 import { useState } from "react";
-import { FriendsDisplay } from "./friends-display";
 import { EditFamilyDisplay } from "./edit-family-display";
 import { FamilyEditorControls } from "./family-editor-controls";
 import { useMutation } from "@tanstack/react-query";
 import { createFamily } from "@/api/create-family";
 import toast from "react-hot-toast";
 import { deleteFamily } from "@/api/delete-family";
+import { FamilyMembersDisplay } from "./family-members-display";
 
 interface FamilyManagementProps {
   availableFriends: Friend[];
@@ -47,7 +47,6 @@ export function FamilyManagement({
         variables.friend_ids.includes(f.id)
       );
       setFamilyMembers((prev) => [...prev, ...friendsToAdd]);
-      toast.success("Members added successfully!");
     },
     onError: () => toast.error("Failed to add members."),
   });
@@ -58,7 +57,6 @@ export function FamilyManagement({
       setFamilyMembers((prev) =>
         prev.filter((m) => !variables.friend_ids.includes(m.id))
       );
-      toast.success("Members removed successfully!");
     },
     onError: () => toast.error("Failed to remove members."),
   });
@@ -85,15 +83,16 @@ export function FamilyManagement({
     setSelectedFriends((prev) =>
       prev.includes(id) ? prev.filter((fId) => fId !== id) : [...prev, id]
     );
+
   const toggleMemberSelection = (id: string) =>
     setSelectedMembers((prev) =>
       prev.includes(id) ? prev.filter((mId) => mId !== id) : [...prev, id]
     );
 
   return (
-    <Card className="border-border/40 shadow-sm">
+    <Card className="border-border/40 shadow-sm py-0">
       <CardHeader className="bg-muted/50">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between py-0">
           <div className="flex-1">
             <CardTitle className="text-xl font-bold">
               {subscription.name}'s Family
@@ -118,7 +117,7 @@ export function FamilyManagement({
       </CardHeader>
 
       <CardContent className="p-4 space-y-6">
-        {isEditing ? (
+        {isEditing && (
           <EditFamilyDisplay
             availableFriends={filteredAvailableFriends}
             familyMembers={familyMembers}
@@ -127,9 +126,9 @@ export function FamilyManagement({
             selectedMembers={selectedMembers}
             toggleMemberSelection={toggleMemberSelection}
           />
-        ) : (
-          <FriendsDisplay friends={familyMembers} />
         )}
+
+        {!isEditing && <FamilyMembersDisplay friends={familyMembers} />}
       </CardContent>
       <CardFooter className="flex flex-col gap-2 p-4 pt-0">
         {isEditing && (
