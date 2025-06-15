@@ -40,43 +40,49 @@ export function FamilyManagement({
     (friend) => !familyMembers.some((member) => member.id === friend.id)
   );
 
-  const { mutate: addMembersMutation, isPending: isAdding } = useMutation({
+  const { mutate: addMembers, isPending: isAdding } = useMutation({
     mutationFn: createFamily,
-    onSuccess(_, variables) {
-      const friendsToAdd = availableFriends.filter((f) =>
-        variables.friend_ids.includes(f.id)
-      );
-      setFamilyMembers((prev) => [...prev, ...friendsToAdd]);
-    },
-    onError: () => toast.error("Failed to add members."),
-  });
-
-  const { mutate: removeMembersMutation, isPending: isRemoving } = useMutation({
-    mutationFn: deleteFamily,
-    onSuccess(_, variables) {
+    onError: (_, variables) => {
       setFamilyMembers((prev) =>
         prev.filter((m) => !variables.friend_ids.includes(m.id))
       );
+      toast.error("Falha ao adicionar membros");
     },
-    onError: () => toast.error("Failed to remove members."),
   });
 
-  function addMembers(friendIds: string[]) {
+  const { mutate: removeMembers, isPending: isRemoving } = useMutation({
+    mutationFn: deleteFamily,
+    onError: (_, variables) => {
+      const restored = availableFriends.filter((f) =>
+        variables.friend_ids.includes(f.id)
+      );
+      setFamilyMembers((prev) => [...prev, ...restored]);
+      toast.error("Falha ao remover membros");
+    },
+  });
+
+  function handleAddMember(friendIds: string[]) {
     if (friendIds.length === 0) return;
-    addMembersMutation({
+
+    const added = availableFriends.filter((f) => friendIds.includes(f.id));
+
+    setFamilyMembers((prev) => [...prev, ...added]);
+
+    addMembers({
       subscriptionId: subscription.id,
       friend_ids: friendIds,
     });
-    setSelectedFriends([]);
   }
 
-  function removeMembers(memberIds: string[]) {
-    if (memberIds.length === 0) return;
-    removeMembersMutation({
+  function handleRemoveMember(friendIds: string[]) {
+    if (friendIds.length === 0) return;
+
+    setFamilyMembers((prev) => prev.filter((m) => !friendIds.includes(m.id)));
+
+    removeMembers({
       subscriptionId: subscription.id,
-      friend_ids: memberIds,
+      friend_ids: friendIds,
     });
-    setSelectedMembers([]);
   }
 
   const toggleFriendSelection = (id: string) =>
@@ -138,8 +144,8 @@ export function FamilyManagement({
             familyMembers={familyMembers}
             selectedFriends={selectedFriends}
             selectedMembers={selectedMembers}
-            addMembers={addMembers}
-            removeMembers={removeMembers}
+            addMembers={handleAddMember}
+            removeMembers={handleRemoveMember}
             isPending={isAdding || isRemoving}
           />
         )}
