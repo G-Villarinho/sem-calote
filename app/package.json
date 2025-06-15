@@ -34,8 +34,7 @@
     "react-router-dom": "^7.6.2",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.10",
-    "zod": "^3.25.62",
-    "zustand": "^5.0.5"
+    "zod": "^3.25.62"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
