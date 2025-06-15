@@ -34,15 +34,21 @@ export function SelectableListColumn({
                     selectedItems.includes(item.id) && "bg-muted/50"
                   )}
                 >
-                  <div className="flex items-center">
+                  <div className="flex flex-1 items-center min-w-0">
                     <Checkbox
                       checked={selectedItems.includes(item.id)}
                       onCheckedChange={() => onToggleSelection(item.id)}
                       className="mr-2"
                     />
-                    <span>{item.name}</span>
+                    <span className="truncate text-xs" title={item.name}>
+                      {item.name}
+                    </span>
                   </div>
-                  <span className="text-xs text-muted-foreground">
+
+                  <span
+                    className="ml-4 flex-shrink-0 text-xs text-muted-foreground"
+                    title={item.email}
+                  >
                     {item.email}
                   </span>
                 </li>

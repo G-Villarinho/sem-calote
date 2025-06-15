@@ -9,7 +9,7 @@ interface FriendsDisplayProps {
 
 export function FamilyMembersDisplay({ friends }: FriendsDisplayProps) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 animate-fadeIn">
       <h3 className="text-sm font-medium">Family Members</h3>
       <Card className="border-dashed py-0">
         <ScrollArea className="h-[200px]">

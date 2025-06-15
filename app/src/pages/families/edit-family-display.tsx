@@ -16,7 +16,7 @@ export function EditFamilyDisplay() {
   );
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid gap-4 md:grid-cols-2 animate-fadeIn">
       <SelectableListColumn
         title="Available Friends"
         items={filteredFriends}

@@ -3,15 +3,19 @@ import { Users, CreditCard, Menu, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
+import logo from "@/assets/images/logo.png";
+
 export function Navbar() {
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="px-4 md:px-20 lg:px-16 xl:36 flex h-16 items-center justify-between">
         <div className="flex items-center gap-x-6">
           <Link to="/" className="flex items-center space-x-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-secondary">
-              <span className="text-sm font-bold text-white">SC</span>
-            </div>
+            <img
+              src={logo}
+              alt="logo do app ícone de símbolo de dólar em estilo minimalista, representando o tema de dinheiro e economia."
+              className="h-8 w-8 sm:h-10 sm:w-10"
+            />
             <span className="hidden font-bold text-xl sm:inline-block bg-gradient-to-r from-white/50 to-white bg-clip-text text-transparent">
               Sem Calote
             </span>

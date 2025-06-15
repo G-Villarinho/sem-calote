@@ -7,12 +7,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Edit, House } from "lucide-react";
+import { Edit, House, X } from "lucide-react";
 import { useState } from "react";
 import { EditFamilyDisplay } from "./edit-family-display";
 import { FamilyEditorControls } from "./family-editor-controls";
 import { FamilyMembersDisplay } from "./family-members-display";
 import { useFamily } from "./use-family";
+import { cn } from "@/lib/utils";
 
 interface FamilyManagementCardProps {
   subscriptionName: string;
@@ -23,7 +24,7 @@ export function FamilyManagementCard({
 }: FamilyManagementCardProps) {
   const [isEditing, setIsEditing] = useState(false);
 
-  const { familyMembers, isAdding, isRemoving } = useFamily();
+  const { familyMembers } = useFamily();
 
   return (
     <Card className="border-border/40 shadow-sm py-0 animate-fadeIn">
@@ -46,7 +47,23 @@ export function FamilyManagementCard({
               className="h-8 w-8"
               onClick={() => setIsEditing(!isEditing)}
             >
-              <Edit className="h-4 w-4" />
+              <Edit
+                className={cn(
+                  "absolute h-4 w-4 transition-all duration-300",
+                  isEditing
+                    ? "rotate-45 scale-0 opacity-0"
+                    : "rotate-0 scale-100 opacity-100"
+                )}
+              />
+
+              <X
+                className={cn(
+                  "absolute h-4 w-4 transition-all duration-300",
+                  isEditing
+                    ? "rotate-0 scale-100 opacity-100"
+                    : "-rotate-45 scale-0 opacity-0"
+                )}
+              />
               <span className="sr-only">Edit</span>
             </Button>
           </div>
@@ -59,12 +76,7 @@ export function FamilyManagementCard({
         {!isEditing && <FamilyMembersDisplay friends={familyMembers} />}
       </CardContent>
       <CardFooter className="flex flex-col gap-2 p-4 pt-0">
-        {isEditing && (
-          <FamilyEditorControls
-            onDone={() => setIsEditing(false)}
-            isPending={isAdding || isRemoving}
-          />
-        )}
+        {isEditing && <FamilyEditorControls />}
       </CardFooter>
     </Card>
   );
