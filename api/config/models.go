@@ -1,10 +1,11 @@
 package config
 
 type Environment struct {
-	Env    string `env:"ENV,default=development"`
-	API    API
-	Sqlite Sqlite
-	Hermes Hermes
+	Env         string `env:"ENV,default=development"`
+	API         API
+	Sqlite      Sqlite
+	Hermes      Hermes
+	MercadoPago MercadoPago
 }
 
 type API struct {
@@ -24,4 +25,13 @@ type Sqlite struct {
 	MaxIdle     int    `env:"SQLITE_MAX_IDLE,default=5"`
 	MaxLifeTime int    `env:"SQLITE_MAX_LIFE_TIME,default=3600"` // in seconds
 	Timeout     int    `env:"SQLITE_TIMEOUT,default=5"`          // in seconds
+}
+
+type MercadoPago struct {
+	PublicKey        string  `env:"MERCADO_PAGO_PUBLIC_KEY"`
+	AccessToken      string  `env:"MERCADO_PAGO_ACCESS_TOKEN"`
+	BaseURL          string  `env:"MERCADO_PAGO_BASE_URL"`
+	SuccessBackURL   string  `env:"MERCADO_PAGO_SUCCESS_BACK_URL"`
+	FailureBackURL   string  `env:"MERCADO_PAGO_FAILURE_BACK_URL"`
+	PixFeePercentage float64 `env:"MERCADO_PAGO_PIX_FEE_PERCENTAGE,default=0.99"`
 }

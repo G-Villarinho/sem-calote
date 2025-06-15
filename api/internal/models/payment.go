@@ -19,7 +19,7 @@ type Payment struct {
 	ID            uuid.UUID
 	AmountInCents int64
 	Status        PaymentStatus
-	PaymentLink   sql.NullString
+	PaymentLink   string
 	CreatedAt     time.Time
 	UpdatedAt     sql.NullTime
 	PaidAt        sql.NullTime
@@ -29,4 +29,11 @@ type Payment struct {
 
 	FriendID uuid.UUID
 	Friend   *Friend `gorm:"foreignKey:FriendID;references:ID"`
+}
+
+type CreatePaymentInput struct {
+	SubscriptionID       uuid.UUID
+	Title                string
+	OriginalPriceInCents int64
+	FriendID             uuid.UUID
 }
