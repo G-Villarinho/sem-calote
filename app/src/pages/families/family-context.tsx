@@ -1,10 +1,12 @@
 import { createContext, useState, type ReactNode } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 import { createFamily } from "@/api/create-family";
 import { deleteFamily } from "@/api/delete-family";
 import type { Friend } from "@/api/types/friend";
+import { queryKeys } from "@/lib/query-keys";
+import type { Subscription } from "@/api/types/subscription";
 
 interface FamilyContextValue {
   availableFriends: Friend[];
@@ -38,6 +40,7 @@ export function FamilyProvider({
   initialAvailableFriends,
   subscriptionId,
 }: FamilyProviderProps) {
+  const queryClient = useQueryClient();
   const [availableFriends, setAvailableFriends] = useState<Friend[]>(
     initialAvailableFriends
   );
@@ -47,6 +50,34 @@ export function FamilyProvider({
 
   const { mutate: addMembers, isPending: isAdding } = useMutation({
     mutationFn: createFamily,
+    onSuccess: (_, variables) => {
+      const queryKey = queryKeys.subscriptions.all(true);
+
+      queryClient.setQueryData<Subscription[]>(queryKey, (oldData) => {
+        if (!oldData) {
+          return oldData;
+        }
+
+        return oldData.map((subscription) => {
+          if (subscription.id === subscriptionId) {
+            return {
+              ...subscription,
+              friends: [
+                ...(subscription.friends || []),
+                ...availableFriends.filter((friendId) =>
+                  variables.friend_ids.includes(friendId.id)
+                ),
+              ],
+            };
+          }
+          return subscription;
+        });
+      });
+
+      setAvailableFriends((prev) =>
+        prev.filter((f) => !variables.friend_ids.includes(f.id))
+      );
+    },
     onError: (_, variables) => {
       setFamilyMembers((prev) =>
         prev.filter((m) => !variables.friend_ids.includes(m.id))
@@ -57,6 +88,27 @@ export function FamilyProvider({
 
   const { mutate: removeMembers, isPending: isRemoving } = useMutation({
     mutationFn: deleteFamily,
+    onSuccess: (_, variables) => {
+      const queryKey = queryKeys.subscriptions.all(true);
+
+      queryClient.setQueryData<Subscription[]>(queryKey, (oldData) => {
+        if (!oldData) {
+          return oldData;
+        }
+
+        return oldData.map((subscription) => {
+          if (subscription.id === subscriptionId) {
+            return {
+              ...subscription,
+              friends: subscription.friends?.filter(
+                (friend) => !variables.friend_ids.includes(friend.id)
+              ),
+            };
+          }
+          return subscription;
+        });
+      });
+    },
     onError: (_, variables) => {
       const restored = availableFriends.filter((f) =>
         variables.friend_ids.includes(f.id)
