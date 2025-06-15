@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Edit } from "lucide-react";
+import { Edit, House } from "lucide-react";
 import { useState } from "react";
 import { EditFamilyDisplay } from "./edit-family-display";
 import { FamilyEditorControls } from "./family-editor-controls";
@@ -27,10 +27,11 @@ export function FamilyManagementCard({
 
   return (
     <Card className="border-border/40 shadow-sm py-0">
-      <CardHeader className="bg-muted/50">
-        <div className="flex items-center justify-between py-0">
+      <CardHeader className="bg-muted/50 ">
+        <div className="flex items-center justify-between py-3">
           <div className="flex-1">
-            <CardTitle className="text-xl font-bold">
+            <CardTitle className="text-xl font-bold items-center flex">
+              <House className="inline h-5 w-5 mr-2" />
               {subscriptionName}'s Family
             </CardTitle>
             <CardDescription>
