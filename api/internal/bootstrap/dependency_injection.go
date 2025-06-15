@@ -29,5 +29,6 @@ func provideServices(container *dig.Container) {
 func provideRepositories(container *dig.Container) {
 	pkgs.Provide(container, repositories.NewFamilyRepository)
 	pkgs.Provide(container, repositories.NewFriendRepository)
+	pkgs.Provide(container, repositories.NewPaymentRepository)
 	pkgs.Provide(container, repositories.NewSubscriptionRepository)
 }
