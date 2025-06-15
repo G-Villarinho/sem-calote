@@ -1,37 +1,34 @@
 import { Button } from "@/components/ui/button";
 import { ChevronRight, X, Loader2 } from "lucide-react";
-import type { Friend } from "@/api/types/friend";
+import { useFamily } from "./use-family";
 
 interface FamilyEditorControlsProps {
   onDone: () => void;
-  availableFriends: Friend[];
-  familyMembers: Friend[];
-  selectedFriends: string[];
-  selectedMembers: string[];
-  addMembers: (friendIds: string[]) => void;
-  removeMembers: (memberIds: string[]) => void;
   isPending: boolean;
 }
 
 export function FamilyEditorControls({
   onDone,
-  availableFriends,
-  familyMembers,
-  selectedFriends,
-  selectedMembers,
-  addMembers,
-  removeMembers,
   isPending,
 }: FamilyEditorControlsProps) {
-  const handleAddAll = () => {
-    const allFriendIds = availableFriends.map((f) => f.id);
-    addMembers(allFriendIds);
-  };
+  const {
+    availableFriends,
+    familyMembers,
+    selectedFriends,
+    selectedMembers,
+    handleAddMember,
+    handleRemoveMember,
+  } = useFamily();
 
-  const handleRemoveAll = () => {
+  function handleAddAll() {
+    const allFriendIds = availableFriends.map((f) => f.id);
+    handleAddMember(allFriendIds);
+  }
+
+  function handleRemoveAll() {
     const allMemberIds = familyMembers.map((m) => m.id);
-    removeMembers(allMemberIds);
-  };
+    handleRemoveMember(allMemberIds);
+  }
 
   return (
     <div className="flex w-full flex-col gap-2 pt-4">
@@ -40,7 +37,7 @@ export function FamilyEditorControls({
           variant="outline"
           size="sm"
           className="flex-1"
-          onClick={() => addMembers(selectedFriends)}
+          onClick={() => handleAddMember(selectedFriends)}
           disabled={selectedFriends.length === 0 || isPending}
         >
           <ChevronRight className="mr-1 h-4 w-4" /> Add Selected
@@ -60,7 +57,7 @@ export function FamilyEditorControls({
           variant="outline"
           size="sm"
           className="flex-1"
-          onClick={() => removeMembers(selectedMembers)}
+          onClick={() => handleRemoveMember(selectedMembers)}
           disabled={selectedMembers.length === 0 || isPending}
         >
           <X className="mr-1 h-4 w-4" /> Remove Selected

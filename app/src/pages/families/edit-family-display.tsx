@@ -1,23 +1,16 @@
-import type { Friend } from "@/api/types/friend";
 import { SelectableListColumn } from "./selectable-list-cloumn";
+import { useFamily } from "./use-family";
 
-interface EditFamilyDisplayProps {
-  availableFriends: Friend[];
-  familyMembers: Friend[];
-  selectedFriends: string[];
-  toggleFriendSelection: (id: string) => void;
-  selectedMembers: string[];
-  toggleMemberSelection: (id: string) => void;
-}
+export function EditFamilyDisplay() {
+  const {
+    availableFriends,
+    familyMembers,
+    selectedFriends,
+    toggleFriendSelection,
+    selectedMembers,
+    toggleMemberSelection,
+  } = useFamily();
 
-export function EditFamilyDisplay({
-  availableFriends,
-  familyMembers,
-  selectedFriends,
-  toggleFriendSelection,
-  selectedMembers,
-  toggleMemberSelection,
-}: EditFamilyDisplayProps) {
   const filteredFriends = availableFriends.filter(
     (friend) => !familyMembers.some((member) => member.id === friend.id)
   );

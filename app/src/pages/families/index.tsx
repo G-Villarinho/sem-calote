@@ -4,8 +4,8 @@ import { Heading } from "@/components/heading";
 import { queryKeys } from "@/lib/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { House } from "lucide-react";
-import { FamilyManagement } from "./family-management";
-import type { Subscription } from "@/api/types/subscription";
+import { FamilyManagementCard } from "./family-management-card";
+import { FamilyProvider } from "./family-context";
 
 const WITH_FRIENDS = true;
 
@@ -39,11 +39,17 @@ export function FamiliesPage() {
       {subscriptions && subscriptions.length > 0 && (
         <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
           {subscriptions.map((subscription) => (
-            <FamilyManagement
+            <FamilyProvider
               key={subscription.id}
-              subscription={subscription as Subscription}
-              availableFriends={AvailableFriends || []}
-            />
+              initialMembers={subscription.friends || []}
+              initialAvailableFriends={AvailableFriends || []}
+              subscriptionId={subscription.id}
+            >
+              <FamilyManagementCard
+                key={subscription.id}
+                subscriptionName={subscription.name}
+              />
+            </FamilyProvider>
           ))}
         </div>
       )}
