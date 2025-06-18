@@ -19,7 +19,6 @@ type Payment struct {
 	ID            uuid.UUID
 	AmountInCents int64
 	Status        PaymentStatus
-	PaymentLink   string
 	CreatedAt     time.Time
 	UpdatedAt     sql.NullTime
 	PaidAt        sql.NullTime
@@ -32,8 +31,8 @@ type Payment struct {
 }
 
 type CreatePaymentInput struct {
-	SubscriptionID       uuid.UUID
-	Title                string
-	OriginalPriceInCents int64
-	FriendID             uuid.UUID
+	SubscriptionID uuid.UUID
+	Title          string
+	PriceInCents   int64
+	FriendID       uuid.UUID
 }

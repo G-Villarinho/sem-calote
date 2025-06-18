@@ -3,6 +3,7 @@ package clients
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/g-villarinho/sem-calote/api/config"
 	mercadoPagoConfig "github.com/mercadopago/sdk-go/pkg/config"
@@ -14,6 +15,7 @@ type MercadoPagoGatewayClient struct {
 }
 
 func NewMercadoPagoGatewayClient() (PaymentGatewayClient, error) {
+
 	cfg, err := mercadoPagoConfig.New(config.Env.MercadoPago.AccessToken)
 	if err != nil {
 		return nil, err
@@ -27,10 +29,11 @@ func NewMercadoPagoGatewayClient() (PaymentGatewayClient, error) {
 }
 
 func (m *MercadoPagoGatewayClient) CreatePaymentLink(ctx context.Context, input CreatePaymentLinkInput) (string, error) {
+	fmt.Println(config.Env.MercadoPago.AccessToken)
+
 	request := preference.Request{
 		Items: []preference.ItemRequest{
 			{
-				ID:         input.ProductID.String(),
 				Title:      input.Title,
 				Quantity:   1,
 				UnitPrice:  input.UnitPrice,

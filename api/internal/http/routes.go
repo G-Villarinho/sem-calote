@@ -5,7 +5,6 @@ import (
 
 	"github.com/g-villarinho/sem-calote/api/config"
 	"github.com/g-villarinho/sem-calote/api/internal/handlers"
-	"github.com/g-villarinho/sem-calote/api/internal/handlers/debug"
 	"github.com/labstack/echo/v4"
 )
 
@@ -13,12 +12,11 @@ func SetupRoutes(
 	e *echo.Echo,
 	friendHandler handlers.FriendHandler,
 	subscriptionHandler handlers.SubscriptionHandler,
-	familyHandler handlers.FamilyHandler,
-	paymentDebugHandler debug.PaymentDebugHandler) {
+	familyHandler handlers.FamilyHandler) {
 	group := e.Group("/api/v1")
 
 	if config.Env.Env == config.EnvDevelopment {
-		setupInternalRoutes(group, paymentDebugHandler)
+		setupInternalRoutes(group)
 	}
 
 	setupFriendRoutes(group, friendHandler)
@@ -26,12 +24,11 @@ func SetupRoutes(
 	setupFamilyRoutes(group, familyHandler)
 }
 
-func setupInternalRoutes(group *echo.Group, paymentDebugHandler debug.PaymentDebugHandler) {
+func setupInternalRoutes(group *echo.Group) {
 	group.GET("/envs", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, config.Env)
 	})
 
-	group.POST("/debug/payment/:subscriptionId/:friendId", paymentDebugHandler.CreatePaymentDebug)
 }
 
 func setupFriendRoutes(group *echo.Group, h handlers.FriendHandler) {

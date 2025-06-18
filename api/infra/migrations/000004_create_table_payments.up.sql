@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS payments (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id VARCHAR(36) PRIMARY KEY,
     subscription_id VARCHAR(36) NOT NULL,
     friend_id VARCHAR(36) NOT NULL,
     amount_in_cents INTEGER NOT NULL,

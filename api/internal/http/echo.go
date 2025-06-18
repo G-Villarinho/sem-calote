@@ -5,7 +5,6 @@ import (
 
 	"github.com/g-villarinho/sem-calote/api/config"
 	"github.com/g-villarinho/sem-calote/api/internal/handlers"
-	"github.com/g-villarinho/sem-calote/api/internal/handlers/debug"
 	"github.com/g-villarinho/sem-calote/api/internal/handlers/middlewares"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -19,15 +18,14 @@ type EchoServer struct {
 func NewEchoServer(
 	friendHandler handlers.FriendHandler,
 	subscriptionHandler handlers.SubscriptionHandler,
-	familyHandler handlers.FamilyHandler,
-	paymentDebugHandler debug.PaymentDebugHandler) *EchoServer {
+	familyHandler handlers.FamilyHandler) *EchoServer {
 	e := echo.New()
 
 	e.Use(middlewares.CORS(config.Env.API.AllowOrigins))
 	e.Use(middleware.RequestID())
 	e.Use(middleware.Recover())
 
-	SetupRoutes(e, friendHandler, subscriptionHandler, familyHandler, paymentDebugHandler)
+	SetupRoutes(e, friendHandler, subscriptionHandler, familyHandler)
 	return &EchoServer{
 		e:    e,
 		port: fmt.Sprintf(":%d", config.Env.API.Port),
