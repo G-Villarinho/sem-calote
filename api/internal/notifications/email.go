@@ -44,7 +44,7 @@ func (e *emailNotification) SendPaymentRequestEmail(ctx context.Context, friendN
 	var htmlBuffer bytes.Buffer
 	data := models.PaymentRequestData{
 		FriendName:  friendName,
-		Value:       value,
+		Value:       fmt.Sprintf("%.2f", value),
 		Description: description,
 		DueDate:     dueData.Format("02/01/2006"),
 		PixKey:      config.Env.Pix.Key,

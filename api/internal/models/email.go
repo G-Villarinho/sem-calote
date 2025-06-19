@@ -2,7 +2,7 @@ package models
 
 type PaymentRequestData struct {
 	FriendName  string
-	Value       float64
+	Value       string
 	Description string
 	DueDate     string
 	PixKey      string
