@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	cronSpec = "*/2 * * * *"
+	cronSpec = "0 8 * * *"
 )
 
 func addNotifyPaymentRequestCronJob(cronScheduler *cron.Cron, container *dig.Container) {
