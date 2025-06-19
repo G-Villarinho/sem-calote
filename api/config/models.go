@@ -6,6 +6,7 @@ type Environment struct {
 	Sqlite      Sqlite
 	Hermes      Hermes
 	MercadoPago MercadoPago
+	Pix         Pix
 }
 
 type API struct {
@@ -34,4 +35,8 @@ type MercadoPago struct {
 	SuccessBackURL   string  `env:"MERCADO_PAGO_SUCCESS_BACK_URL"`
 	FailureBackURL   string  `env:"MERCADO_PAGO_FAILURE_BACK_URL"`
 	PixFeePercentage float64 `env:"MERCADO_PAGO_PIX_FEE_PERCENTAGE,default=0.99"`
+}
+
+type Pix struct {
+	Key string `env:"PIX_KEY"`
 }

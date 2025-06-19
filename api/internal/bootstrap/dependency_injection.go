@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"github.com/g-villarinho/sem-calote/api/internal/clients"
 	"github.com/g-villarinho/sem-calote/api/internal/handlers"
+	"github.com/g-villarinho/sem-calote/api/internal/notifications"
 	"github.com/g-villarinho/sem-calote/api/internal/repositories"
 	"github.com/g-villarinho/sem-calote/api/internal/services"
 	"github.com/g-villarinho/sem-calote/api/pkgs"
@@ -11,13 +12,19 @@ import (
 
 func InitializeDependencyInjection(container *dig.Container) {
 	providerClients(container)
+	providerNotifications(container)
 	provideRepositories(container)
 	provideServices(container)
 	provideHandlers(container)
 }
 
 func providerClients(container *dig.Container) {
+	pkgs.Provide(container, clients.NewHermesMailerClient)
 	pkgs.Provide(container, clients.NewMercadoPagoGatewayClient)
+}
+
+func providerNotifications(container *dig.Container) {
+	pkgs.Provide(container, notifications.NewEmailNotification)
 }
 
 func provideHandlers(container *dig.Container) {

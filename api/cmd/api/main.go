@@ -9,6 +9,7 @@ import (
 	"github.com/g-villarinho/sem-calote/api/infra"
 	"github.com/g-villarinho/sem-calote/api/internal/bootstrap"
 	"github.com/g-villarinho/sem-calote/api/internal/http"
+	"github.com/g-villarinho/sem-calote/api/internal/schedulers"
 	"github.com/g-villarinho/sem-calote/api/pkgs"
 	"go.uber.org/dig"
 	"gorm.io/gorm"
@@ -35,6 +36,8 @@ func main() {
 
 	bootstrap.InitializeDependencyInjection(container)
 	pkgs.Provide(container, http.NewEchoServer)
+
+	schedulers.StartCronJobs(container)
 
 	app := pkgs.Resolve[*http.EchoServer](container)
 	app.Start()

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lembrete de Pagamento - Sem Calote</title>
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
+</head>
+
+<body
+    style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fafafa; line-height: 1.6;">
+    <!-- Main Container -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
+        style="background-color: #fafafa;">
+        <tr>
+            <td align="center" style="padding: 20px 0;">
+                <!-- Email Container -->
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600"
+                    style="max-width: 600px; background-color: #ffffff; border-radius: 8px; border: 1px solid #e4e4e7; overflow: hidden;">
+
+                    <!-- Header -->
+                    <tr>
+                        <td style="background-color: #09090b; padding: 30px 40px; text-align: center;">
+                            <h1
+                                style="margin: 0; color: #fafafa; font-size: 28px; font-weight: 600; letter-spacing: -0.5px;">
+                                Sem Calote
+                            </h1>
+                            <p style="margin: 8px 0 0 0; color: #a1a1aa; font-size: 14px;">
+                                Controle de pagamentos entre amigos
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Main Content -->
+                    <tr>
+                        <td style="padding: 40px;">
+                            <!-- Greeting -->
+                            <h2 style="margin: 0 0 20px 0; color: #09090b; font-size: 24px; font-weight: 600;">
+                                Olá, {{ .FriendName }}! 👋
+                            </h2>
+
+                            <p style="margin: 0 0 30px 0; color: #52525b; font-size: 16px; line-height: 1.6;">
+                                Espero que você esteja bem! Este é um lembrete amigável sobre um pagamento pendente.
+                            </p>
+
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
+                                style="background-color: #f4f4f5; border-radius: 8px; border: 1px solid #e4e4e7; margin: 30px 0;">
+                                <tr>
+                                    <td style="padding: 25px;">
+                                        <h3
+                                            style="margin: 0 0 20px 0; color: #09090b; font-size: 18px; font-weight: 600;">
+                                            📋 Detalhes do Pagamento
+                                        </h3>
+
+                                        <div
+                                            style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #e4e4e7;">
+                                            <span
+                                                style="color: #71717a; font-size: 14px; font-weight: 500; display: block; margin-bottom: 5px;">Valor
+                                                a pagar:</span>
+                                            <span style="color: #09090b; font-size: 32px; font-weight: 700;">R$
+                                                {{ .Value }}</span>
+                                        </div>
+
+                                        <div
+                                            style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #e4e4e7;">
+                                            <span
+                                                style="color: #71717a; font-size: 14px; font-weight: 500; display: block; margin-bottom: 5px;">Descrição:</span>
+                                            <span style="color: #09090b; font-size: 16px;"> {{ .Description }}</span>
+                                        </div>
+
+                                        <div style="margin-bottom: 0;">
+                                            <span
+                                                style="color: #71717a; font-size: 14px; font-weight: 500; display: block; margin-bottom: 5px;">Data
+                                                de vencimento:</span>
+                                            <span style="color: #dc2626; font-size: 16px; font-weight: 600;"> {{
+                                                .DueDate }}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <div
+                                style="background-color: #f0fdf4; border-radius: 8px; padding: 20px; margin: 30px 0; border: 1px solid #bbf7d0; border-left: 4px solid #22c55e;">
+                                <h4 style="margin: 0 0 15px 0; color: #15803d; font-size: 16px; font-weight: 600;">
+                                    🔑 Chave PIX para Pagamento
+                                </h4>
+
+                                <div
+                                    style="background-color: #ffffff; border-radius: 6px; padding: 15px; border: 1px solid #d1fae5;">
+                                    <div style="margin-bottom: 10px;">
+                                        <span
+                                            style="color: #374151; font-size: 14px; font-weight: 500; display: block; margin-bottom: 5px;">Tipo
+                                            da chave:</span>
+                                        <span style="color: #15803d; font-size: 14px;"> Chave aleatória</span>
+                                    </div>
+
+                                    <div style="margin-bottom: 0;">
+                                        <span
+                                            style="color: #374151; font-size: 14px; font-weight: 500; display: block; margin-bottom: 5px;">Chave
+                                            PIX:</span>
+                                        <div
+                                            style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 4px; padding: 10px; font-family: 'Courier New', monospace;">
+                                            <span
+                                                style="color: #111827; font-size: 14px; font-weight: 600; word-break: break-all;">
+                                                {{ .PixKey }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <p style="margin: 15px 0 0 0; color: #059669; font-size: 12px; text-align: center;">
+                                    💡 Copie a chave acima e cole no seu app de pagamentos
+                                </p>
+                            </div>
+
+                            <div
+                                style="background-color: #fafafa; border-radius: 8px; padding: 20px; margin: 30px 0; border: 1px solid #e4e4e7;">
+                                <p style="margin: 0; color: #52525b; font-size: 14px; line-height: 1.5;">
+                                    <strong>💬 Possível problema:</strong> Sei que às vezes esquecemos dessas coisas! Se
+                                    houver algum problema ou precisar conversar sobre o pagamento, é só me chamar.
+                                    Podemos nos encontrar ou você pode fazer o pagamento da forma que for mais
+                                    conveniente para você. 😊
+                                </p>
+                            </div>
+
+                            <p style="margin: 30px 0 0 0; color: #52525b; font-size: 16px;">
+                                Obrigado pela atenção!<br>
+                                <strong style="color: #09090b;">Gabriel</strong>
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td
+                            style="background-color: #f4f4f5; padding: 30px 40px; text-align: center; border-top: 1px solid #e4e4e7;">
+                            <p style="margin: 0 0 10px 0; color: #71717a; font-size: 12px;">
+                                Este lembrete foi enviado através do <strong>Sem Calote</strong>
+                            </p>
+                            <p style="margin: 0; color: #a1a1aa; font-size: 11px;">
+                                Controle simples de pagamentos entre amigos
+                            </p>
+
+                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e4e4e7;">
+                                <p style="margin: 0; color: #a1a1aa; font-size: 10px;">
+                                    Sem Calote - Versão 1.0 | Desenvolvido para facilitar o controle de pagamentos
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
